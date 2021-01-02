@@ -1,23 +1,73 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using IdentityServer4.EntityFramework.DbContexts;
+using Microsoft.AspNetCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting;
+using Nuka.Identity.API.Data;
+using Nuka.Identity.API.Extensions;
+using Serilog;
 
 namespace Nuka.Identity.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        static readonly string Namespace = typeof(Program).Namespace;
+
+        static readonly string AppName =
+            Namespace.Substring(Namespace.LastIndexOf('.', Namespace.LastIndexOf('.') - 1) + 1);
+
+        public static int Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var configuration = GetConfiguration();
+            Log.Logger = CreateSerilogLogger(configuration);
+
+            Log.Information("Configuring web host ({ApplicationContext})...", AppName);
+            var host = BuildWebHost(configuration);
+
+            Log.Information("Applying web host ({ApplicationContext})...", AppName);
+            host.MigrationDbContext<PersistedGrantDbContext>((_, _) => { })
+                .MigrationDbContext<ApplicationDbContext>((_, _) => { })
+                .MigrationDbContext<ConfigurationDbContext>((context, _) =>
+                {
+                    new ConfigurationDbContextSeed()
+                        .SeedAsync(context, configuration)
+                        .Wait();
+                });
+
+            Log.Information("Starting web host ({ApplicationContext})...", AppName);
+            host.Run();
+
+            return 0;
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        private static IWebHost BuildWebHost(IConfiguration configuration) =>
+            WebHost.CreateDefaultBuilder()
+                .CaptureStartupErrors(false)
+                .ConfigureAppConfiguration(builder => builder.AddConfiguration(configuration))
+                .UseStartup<Startup>()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseSerilog()
+                .Build();
+
+        private static IConfiguration GetConfiguration()
+        {
+            var configurationBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables();
+
+            return configurationBuilder.Build();
+        }
+
+        private static ILogger CreateSerilogLogger(IConfiguration configuration)
+        {
+            return new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.WithProperty("ApplicationContext", AppName)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+        }
     }
 }
