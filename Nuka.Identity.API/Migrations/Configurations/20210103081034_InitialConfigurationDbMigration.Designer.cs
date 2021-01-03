@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Nuka.Identity.API.Migrations.Configurations
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    [Migration("20210103072953_InitialIdentityServerMigration")]
-    partial class InitialIdentityServerMigration
+    [Migration("20210103081034_InitialConfigurationDbMigration")]
+    partial class InitialConfigurationDbMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

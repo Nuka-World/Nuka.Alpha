@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Nuka.Identity.API.Migrations.Applications
 {
-    public partial class InitialIdentityServerMigration : Migration
+    public partial class InitialApplicationDbMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

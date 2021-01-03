@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Nuka.Identity.API.Migrations.PersistedGrants
 {
     [DbContext(typeof(PersistedGrantDbContext))]
-    [Migration("20210103073219_InitialIdentityServerMigration")]
-    partial class InitialIdentityServerMigration
+    [Migration("20210103081018_InitialPersistedGrantDbMigration")]
+    partial class InitialPersistedGrantDbMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

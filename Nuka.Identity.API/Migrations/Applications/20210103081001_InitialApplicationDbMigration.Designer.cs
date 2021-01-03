@@ -10,8 +10,8 @@ using Nuka.Identity.API.Data;
 namespace Nuka.Identity.API.Migrations.Applications
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210103073159_InitialIdentityServerMigration")]
-    partial class InitialIdentityServerMigration
+    [Migration("20210103081001_InitialApplicationDbMigration")]
+    partial class InitialApplicationDbMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
