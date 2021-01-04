@@ -12,9 +12,7 @@ namespace Nuka.Identity.API
     public class Program
     {
         static readonly string Namespace = typeof(Program).Namespace;
-
-        static readonly string AppName =
-            Namespace.Substring(Namespace.LastIndexOf('.', Namespace.LastIndexOf('.') - 1) + 1);
+        private static readonly string AppName = Namespace;
 
         public static int Main(string[] args)
         {
