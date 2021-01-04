@@ -2,13 +2,16 @@ using System;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Nuka.Identity.API.Certificates;
 using Nuka.Identity.API.Data;
@@ -28,6 +31,13 @@ namespace Nuka.Identity.API
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddSqlServer(
+                    _configuration.GetConnectionString("DefaultConnection"),
+                    name: "IdentityDB-check",
+                    tags: new string[] {"IdentityDB"});
 
             // Add IdentityData and persistent 
             services.AddDbContext<ApplicationDbContext>(builder =>
@@ -102,7 +112,20 @@ namespace Nuka.Identity.API
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapDefaultControllerRoute();
+                    endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
+                    {
+                        Predicate = _ => true,
+                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                    });
+                    endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
+                    {
+                        Predicate = r => r.Name.Contains("self")
+                    });
+                });
         }
     }
 }
