@@ -19,11 +19,7 @@ namespace Nuka.Status
                 .AddCheck("self", () => HealthCheckResult.Healthy());
 
             // Add Health Check UI
-            services.AddHealthChecksUI(settings =>
-                {
-                    // TODO: Use env configuration
-                    settings.AddHealthCheckEndpoint("Nuka.Identity.API", "https://localhost:5000/hc");
-                })
+            services.AddHealthChecksUI()
                 .AddInMemoryStorage();
 
             // Add MVC
