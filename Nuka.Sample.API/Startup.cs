@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
 
 namespace Nuka.Sample.API
@@ -28,7 +26,20 @@ namespace Nuka.Sample.API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
             services.AddControllers();
+
+            // Add IdentityData and persistent 
+            services.AddDbContext<SampleDbContext>(builder =>
+            {
+                builder.UseSqlServer(connectionString, optionsBuilder =>
+                {
+                    optionsBuilder.MigrationsAssembly(migrationAssembly);
+                    optionsBuilder.EnableRetryOnFailure(15, TimeSpan.FromSeconds(30), null);
+                });
+            });
 
             services.AddCustomHealthCheck(_configuration);
         }
