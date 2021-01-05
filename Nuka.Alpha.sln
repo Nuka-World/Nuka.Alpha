@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Identity.API", "Nuka.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Status", "Nuka.Status\Nuka.Status.csproj", "{77145969-BAAF-432D-B7D9-DBEB521BFE02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Sample.API", "Nuka.Sample.API\Nuka.Sample.API.csproj", "{39E13B22-F941-4A29-B5D2-67B9004FB468}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{77145969-BAAF-432D-B7D9-DBEB521BFE02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77145969-BAAF-432D-B7D9-DBEB521BFE02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77145969-BAAF-432D-B7D9-DBEB521BFE02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39E13B22-F941-4A29-B5D2-67B9004FB468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39E13B22-F941-4A29-B5D2-67B9004FB468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39E13B22-F941-4A29-B5D2-67B9004FB468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39E13B22-F941-4A29-B5D2-67B9004FB468}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
