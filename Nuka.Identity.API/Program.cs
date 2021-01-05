@@ -1,8 +1,8 @@
 using System.IO;
 using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Nuka.Identity.API.Data;
 using Nuka.Identity.API.Extensions;
 using Serilog;
@@ -23,9 +23,9 @@ namespace Nuka.Identity.API
             var host = BuildWebHost(configuration);
 
             Log.Information("Applying web host ({ApplicationContext})...", AppName);
-            host.MigrationDbContext<PersistedGrantDbContext>((_, _) => { })
-                .MigrationDbContext<ApplicationDbContext>((_, _) => { })
-                .MigrationDbContext<ConfigurationDbContext>((context, _) =>
+            host.MigrateDbContext<PersistedGrantDbContext>((_, _) => { })
+                .MigrateDbContext<ApplicationDbContext>((_, _) => { })
+                .MigrateDbContext<ConfigurationDbContext>((context, _) =>
                 {
                     new ConfigurationDbContextSeed()
                         .SeedAsync(context, configuration)

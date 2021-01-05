@@ -1,5 +1,7 @@
 using System;
 using System.Reflection;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -24,12 +26,10 @@ namespace Nuka.Sample.API
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-
-            services.AddControllers();
 
             // Add IdentityData and persistent 
             services.AddDbContext<SampleDbContext>(builder =>
@@ -42,6 +42,14 @@ namespace Nuka.Sample.API
             });
 
             services.AddCustomHealthCheck(_configuration);
+
+            services.AddControllers();
+
+            // Use Autofac container
+            var containers = new ContainerBuilder();
+            containers.Populate(services);
+
+            return new AutofacServiceProvider(containers.Build());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

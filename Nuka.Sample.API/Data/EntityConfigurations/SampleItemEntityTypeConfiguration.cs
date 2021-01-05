@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Nuka.Core.EntityConfigurations;
+using Nuka.Core.Data.EntityConfigurations;
 using Nuka.Sample.API.Data.Entities;
 
 namespace Nuka.Sample.API.Data.EntityConfigurations
@@ -20,12 +20,12 @@ namespace Nuka.Sample.API.Data.EntityConfigurations
 
             builder.Property(item => item.Price)
                 .HasColumnName("FPRICE")
+                .HasPrecision(18, 2)
                 .IsRequired(true);
 
             builder.Property(item => item.Description)
-                .HasColumnName("FDISCIPTION")
-                .IsRequired(false);
-            
+                .HasColumnName("FDISCIPTION");
+
             builder.Property(item => item.SampleTypeId)
                 .HasColumnName("FTYPEID");
 

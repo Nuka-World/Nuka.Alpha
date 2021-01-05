@@ -2,6 +2,8 @@ using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Nuka.Sample.API.Data;
+using Nuka.Sample.API.Extensions;
 using Serilog;
 
 namespace Nuka.Sample.API
@@ -18,6 +20,9 @@ namespace Nuka.Sample.API
 
             Log.Information("Configuring web host ({ApplicationContext})...", AppName);
             var host = CreateHostBuilder(configuration, args).Build();
+
+            Log.Information("Applying web host ({ApplicationContext})...", AppName);
+            host.MigrateDbContext<SampleDbContext>();
 
             Log.Information("Starting web host ({ApplicationContext})...", AppName);
             host.Run();

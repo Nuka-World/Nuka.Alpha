@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Polly;
 
-namespace Nuka.Identity.API.Extensions
+namespace Nuka.Sample.API.Extensions
 {
     public static class WebHostExtensions
     {
@@ -16,7 +16,6 @@ namespace Nuka.Identity.API.Extensions
             where TContext : DbContext
         {
             using var scope = webHost.Services.CreateScope();
-
             var services = scope.ServiceProvider;
             var logger = services.GetRequiredService<ILogger<TContext>>();
             var context = services.GetService<TContext>();
@@ -32,22 +31,23 @@ namespace Nuka.Identity.API.Extensions
                     .WaitAndRetry(
                         retryCount: retries,
                         sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-                        onRetry: ((exception, _, retry, _) =>
+                        onRetry: (exception, _, retry, _) =>
                         {
                             logger.LogWarning(exception,
                                 "[{prefix}] Exception {ExceptionType} with message {Message} detected on attempt {retry} of {retries}",
                                 nameof(TContext), exception.GetType().Name, exception.Message, retry, retries);
-                        })
-                    );
+                        });
 
                 retryPolicy.Execute(() => InvokeSeeder(seeder, context, services));
 
-                logger.LogInformation("Migrated database associated with context {DbContextName}",
+                logger.LogInformation(
+                    "Migrated database associated with context {DbContextName}",
                     typeof(TContext).Name);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName}",
+                logger.LogError(ex,
+                    "An error occurred while migrating the database used on context {DbContextName}",
                     typeof(TContext).Name);
             }
 

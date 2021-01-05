@@ -1,4 +1,4 @@
-﻿using Nuka.Core.Entities;
+﻿using Nuka.Core.Data.Entities;
 
 namespace Nuka.Sample.API.Data.Entities
 {

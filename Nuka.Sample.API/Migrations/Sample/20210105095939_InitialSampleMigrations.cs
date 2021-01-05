@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Nuka.Sample.API.Migrations.Sample
 {
@@ -7,16 +8,21 @@ namespace Nuka.Sample.API.Migrations.Sample
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "SampleType",
+                name: "TYPEM",
                 columns: table => new
                 {
                     FID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FTYPE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    FTYPE = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FCREATETIME = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FCREATEUSER = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FUPDATETIME = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FUPDATEUSER = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FUPDATEFUNC = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SampleType", x => x.FID);
+                    table.PrimaryKey("PK_TYPEM", x => x.FID);
                 });
 
             migrationBuilder.CreateTable(
@@ -27,16 +33,21 @@ namespace Nuka.Sample.API.Migrations.Sample
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FNAME = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     FDISCIPTION = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FPRICE = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    FTYPEID = table.Column<int>(type: "int", nullable: false)
+                    FPRICE = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    FTYPEID = table.Column<int>(type: "int", nullable: false),
+                    FCREATETIME = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FCREATEUSER = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FUPDATETIME = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FUPDATEUSER = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FUPDATEFUNC = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ITEMM", x => x.FID);
                     table.ForeignKey(
-                        name: "FK_ITEMM_SampleType_FTYPEID",
+                        name: "FK_ITEMM_TYPEM_FTYPEID",
                         column: x => x.FTYPEID,
-                        principalTable: "SampleType",
+                        principalTable: "TYPEM",
                         principalColumn: "FID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -53,7 +64,7 @@ namespace Nuka.Sample.API.Migrations.Sample
                 name: "ITEMM");
 
             migrationBuilder.DropTable(
-                name: "SampleType");
+                name: "TYPEM");
         }
     }
 }

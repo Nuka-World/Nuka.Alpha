@@ -1,8 +1,8 @@
-﻿using Nuka.Core.Entities;
+﻿using Nuka.Core.Data.Entities;
 
 namespace Nuka.Sample.API.Data.Entities
 {
-    public class SampleItem: BaseEntity
+    public class SampleItem : BaseEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }
