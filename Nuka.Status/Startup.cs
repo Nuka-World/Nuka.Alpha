@@ -42,7 +42,11 @@ namespace Nuka.Status
             {
                 endpoints.MapDefaultControllerRoute();
                 // Map Health Check UI
-                endpoints.MapHealthChecksUI();
+                endpoints.MapHealthChecksUI(options =>
+                {
+                    //Change Health Check Path
+                    options.UIPath = "/";
+                });
                 // Map Health Check for self service
                 endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
                 {
