@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nuka.Core.Data.Repositories;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
 
@@ -48,6 +49,9 @@ namespace Nuka.Sample.API
             // Use Autofac container
             var containers = new ContainerBuilder();
             containers.Populate(services);
+
+            // TODO:repositories
+            containers.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             return new AutofacServiceProvider(containers.Build());
         }

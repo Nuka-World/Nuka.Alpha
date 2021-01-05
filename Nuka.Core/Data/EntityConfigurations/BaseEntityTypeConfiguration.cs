@@ -4,9 +4,10 @@ using Nuka.Core.Data.Entities;
 
 namespace Nuka.Core.Data.EntityConfigurations
 {
-    public abstract class BaseEntityTypeConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
+    public abstract class BaseEntityTypeConfiguration<TEntity> : MappingEntityTypeConfiguration<TEntity>
+        where TEntity : BaseEntity
     {
-        public virtual void Configure(EntityTypeBuilder<T> builder)
+        public override void Configure(EntityTypeBuilder<TEntity> builder)
         {
             builder.HasKey(entity => entity.Id);
 
@@ -24,7 +25,7 @@ namespace Nuka.Core.Data.EntityConfigurations
 
             builder.Property(entity => entity.UpdateDateTime)
                 .HasColumnName("FUPDATETIME");
-            
+
             builder.Property(entity => entity.UpdateFunction)
                 .HasColumnName("FUPDATEFUNC");
         }

@@ -10,7 +10,7 @@ using Nuka.Sample.API.Data;
 namespace Nuka.Sample.API.Migrations.Sample
 {
     [DbContext(typeof(SampleDbContext))]
-    [Migration("20210105095939_InitialSampleMigrations")]
+    [Migration("20210105130017_InitialSampleMigrations")]
     partial class InitialSampleMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

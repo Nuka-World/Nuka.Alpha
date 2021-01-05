@@ -1,25 +1,41 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using Nuka.Sample.API.Data.Entities;
-using Nuka.Sample.API.Data.EntityConfigurations;
+using Nuka.Core.Data.DBContext;
+using Nuka.Core.Data.Entities;
+using Nuka.Core.Data.EntityConfigurations;
 
 namespace Nuka.Sample.API.Data
 {
-    public class SampleDbContext : DbContext
+    public class SampleDbContext : DbContext, IDbContext
     {
         public SampleDbContext(DbContextOptions options) : base(options)
         {
         }
 
-        public DbSet<SampleItem> SampleItem { get; set; }
-        public DbSet<SampleType> SampleType { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new SampleItemEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new SampleTypeEntityTypeConfiguration());
+            //dynamically load all entity and query type configurations
+            var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type =>
+                (type.BaseType?.IsGenericType ?? false)
+                && (type.BaseType.GetGenericTypeDefinition() == typeof(BaseEntityTypeConfiguration<>)));
+
+            foreach (var typeConfiguration in typeConfigurations)
+            {
+                var configuration = (IMappingConfiguration) Activator.CreateInstance(typeConfiguration);
+                configuration?.ApplyConfiguration(modelBuilder);
+            }
+
+            base.OnModelCreating(modelBuilder);
+        }
+
+        public new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        {
+            return base.Set<TEntity>();
         }
     }
 
