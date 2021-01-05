@@ -2,7 +2,6 @@ using System.IO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 
 namespace Nuka.Status
@@ -34,10 +33,6 @@ namespace Nuka.Status
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseSerilog()
                 .Build();
-
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
 
         private static Serilog.ILogger CreateSerilogLogger(IConfiguration configuration)
         {
