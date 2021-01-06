@@ -18,7 +18,8 @@ namespace Nuka.Core.Data.DBContext
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
 
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
+        public override Task<int> SaveChangesAsync(
+            bool acceptAllChangesOnSuccess,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             OnBeforeSaving();
@@ -44,8 +45,12 @@ namespace Nuka.Core.Data.DBContext
                             entity.CacheIndex = Guid.NewGuid();
                             break;
 
-                        default:
+                        case EntityState.Detached:
+                        case EntityState.Unchanged:
+                        case EntityState.Deleted:
                             break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                     }
                 }
             }

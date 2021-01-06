@@ -52,13 +52,13 @@ namespace Nuka.Sample.API
             var containers = new ContainerBuilder();
             containers.Populate(services);
 
-            // Register Context
+            // Register DbContext
             containers.Register(context => new SampleDbContext(context.Resolve<DbContextOptions<SampleDbContext>>()))
                 .As<IDbContext>().InstancePerLifetimeScope();
-            // Register Services
-            containers.RegisterType<SampleService>().SingleInstance();
             // Register Repositories
             containers.RegisterGeneric(typeof(BusinessRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            // Register Services
+            containers.RegisterType<SampleService>().SingleInstance();
 
             return new AutofacServiceProvider(containers.Build());
         }

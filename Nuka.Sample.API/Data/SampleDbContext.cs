@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Nuka.Core.Data.DBContext;
-using Nuka.Core.Data.Entities;
 using Nuka.Core.Data.EntityConfigurations;
 
 namespace Nuka.Sample.API.Data
@@ -20,9 +19,11 @@ namespace Nuka.Sample.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //dynamically load all entity and query type configurations
-            var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type =>
-                (type.BaseType?.IsGenericType ?? false)
-                && (type.BaseType.GetGenericTypeDefinition() == typeof(BusinessEntityTypeConfiguration<>)));
+            var typeConfigurations =
+                Assembly.GetExecutingAssembly().GetTypes()
+                    .Where(type =>
+                        (type.BaseType?.IsGenericType ?? false)
+                        && (type.BaseType.GetGenericTypeDefinition() == typeof(BusinessEntityTypeConfiguration<>)));
 
             foreach (var typeConfiguration in typeConfigurations)
             {
@@ -31,11 +32,6 @@ namespace Nuka.Sample.API.Data
             }
 
             base.OnModelCreating(modelBuilder);
-        }
-
-        public new DbSet<TEntity> Set<TEntity>() where TEntity : BusinessEntity
-        {
-            return base.Set<TEntity>();
         }
     }
 

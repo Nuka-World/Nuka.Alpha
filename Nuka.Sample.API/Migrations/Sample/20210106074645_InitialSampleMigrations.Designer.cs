@@ -10,7 +10,7 @@ using Nuka.Sample.API.Data;
 namespace Nuka.Sample.API.Migrations.Sample
 {
     [DbContext(typeof(SampleDbContext))]
-    [Migration("20210105130017_InitialSampleMigrations")]
+    [Migration("20210106074645_InitialSampleMigrations")]
     partial class InitialSampleMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,17 +29,33 @@ namespace Nuka.Sample.API.Migrations.Sample
                         .HasColumnName("FID")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateDateTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("FCREATETIME");
+                    b.Property<Guid>("CacheIndex")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("FCACHEINDEX");
 
-                    b.Property<string>("CreateUser")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("FCREATEDTIME");
+
+                    b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("FCREATEUSER");
+                        .HasColumnName("FCREATEDUSER");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("FDISCIPTION");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("FUPDATEDTIME");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("FUPDATEDUSER");
+
+                    b.Property<string>("LastUpdatedFunc")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("FUPDATEDFUNCTION");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -56,18 +72,6 @@ namespace Nuka.Sample.API.Migrations.Sample
                         .HasColumnType("int")
                         .HasColumnName("FTYPEID");
 
-                    b.Property<DateTime>("UpdateDateTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("FUPDATETIME");
-
-                    b.Property<string>("UpdateFunction")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("FUPDATEFUNC");
-
-                    b.Property<string>("UpdateUser")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("FUPDATEUSER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SampleTypeId");
@@ -83,31 +87,35 @@ namespace Nuka.Sample.API.Migrations.Sample
                         .HasColumnName("FID")
                         .UseIdentityColumn();
 
-                    b.Property<DateTime>("CreateDateTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("FCREATETIME");
+                    b.Property<Guid>("CacheIndex")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("FCACHEINDEX");
 
-                    b.Property<string>("CreateUser")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("FCREATEDTIME");
+
+                    b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("FCREATEUSER");
+                        .HasColumnName("FCREATEDUSER");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("FUPDATEDTIME");
+
+                    b.Property<string>("LastUpdatedBy")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("FUPDATEDUSER");
+
+                    b.Property<string>("LastUpdatedFunc")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("FUPDATEDFUNCTION");
 
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("FTYPE");
-
-                    b.Property<DateTime>("UpdateDateTime")
-                        .HasColumnType("datetime2")
-                        .HasColumnName("FUPDATETIME");
-
-                    b.Property<string>("UpdateFunction")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("FUPDATEFUNC");
-
-                    b.Property<string>("UpdateUser")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("FUPDATEUSER");
 
                     b.HasKey("Id");
 
