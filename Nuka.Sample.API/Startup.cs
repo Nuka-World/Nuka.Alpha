@@ -10,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nuka.Core.Data.DBContext;
 using Nuka.Core.Data.Repositories;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
+using Nuka.Sample.API.Services;
 
 namespace Nuka.Sample.API
 {
@@ -50,8 +52,13 @@ namespace Nuka.Sample.API
             var containers = new ContainerBuilder();
             containers.Populate(services);
 
-            // TODO:repositories
-            containers.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            // Register Context
+            containers.Register(context => new SampleDbContext(context.Resolve<DbContextOptions<SampleDbContext>>()))
+                .As<IDbContext>().InstancePerLifetimeScope();
+            // Register Services
+            containers.RegisterType<SampleService>().SingleInstance();
+            // Register Repositories
+            containers.RegisterGeneric(typeof(BusinessRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             return new AutofacServiceProvider(containers.Build());
         }

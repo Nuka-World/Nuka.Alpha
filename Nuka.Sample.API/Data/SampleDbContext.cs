@@ -11,7 +11,7 @@ using Nuka.Core.Data.EntityConfigurations;
 
 namespace Nuka.Sample.API.Data
 {
-    public class SampleDbContext : DbContext, IDbContext
+    public class SampleDbContext : BusinessDbContext, IDbContext
     {
         public SampleDbContext(DbContextOptions options) : base(options)
         {
@@ -22,7 +22,7 @@ namespace Nuka.Sample.API.Data
             //dynamically load all entity and query type configurations
             var typeConfigurations = Assembly.GetExecutingAssembly().GetTypes().Where(type =>
                 (type.BaseType?.IsGenericType ?? false)
-                && (type.BaseType.GetGenericTypeDefinition() == typeof(BaseEntityTypeConfiguration<>)));
+                && (type.BaseType.GetGenericTypeDefinition() == typeof(BusinessEntityTypeConfiguration<>)));
 
             foreach (var typeConfiguration in typeConfigurations)
             {
@@ -33,7 +33,7 @@ namespace Nuka.Sample.API.Data
             base.OnModelCreating(modelBuilder);
         }
 
-        public new DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity
+        public new DbSet<TEntity> Set<TEntity>() where TEntity : BusinessEntity
         {
             return base.Set<TEntity>();
         }

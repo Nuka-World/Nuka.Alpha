@@ -9,7 +9,7 @@ namespace Nuka.Core.Data.EntityConfigurations
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
     public abstract class MappingEntityTypeConfiguration<TEntity> : IMappingConfiguration,
-        IEntityTypeConfiguration<TEntity> where TEntity : BaseEntity
+        IEntityTypeConfiguration<TEntity> where TEntity : BusinessEntity
     {
         #region Methods
 

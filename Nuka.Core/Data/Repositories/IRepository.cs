@@ -8,7 +8,7 @@ namespace Nuka.Core.Data.Repositories
     /// Represents an entity repository
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public partial interface IRepository<TEntity> where TEntity : BaseEntity
+    public partial interface IRepository<TEntity> where TEntity : BusinessEntity
     {
         /// <summary>
         /// Gets a table

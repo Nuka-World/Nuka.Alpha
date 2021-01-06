@@ -2,7 +2,7 @@
 
 namespace Nuka.Sample.API.Data.Entities
 {
-    public class SampleItem : BaseEntity
+    public class SampleItem : BusinessEntity
     {
         public string Name { get; set; }
         public string Description { get; set; }

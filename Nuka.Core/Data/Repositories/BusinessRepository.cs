@@ -7,7 +7,7 @@ using Nuka.Core.Data.Entities;
 
 namespace Nuka.Core.Data.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
+    public class BusinessRepository<TEntity> : IRepository<TEntity> where TEntity : BusinessEntity
     {
         #region Fields
 
@@ -19,7 +19,7 @@ namespace Nuka.Core.Data.Repositories
 
         #region Ctor
 
-        public Repository(IDbContext context)
+        public BusinessRepository(IDbContext context)
         {
             this._context = context;
         }

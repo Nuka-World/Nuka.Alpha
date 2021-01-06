@@ -12,7 +12,7 @@ namespace Nuka.Core.Data.DBContext
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
         /// <returns>A set for the given entity type</returns>
-        DbSet<TEntity> Set<TEntity>() where TEntity : BaseEntity;
+        DbSet<TEntity> Set<TEntity>() where TEntity : BusinessEntity;
 
         /// <summary>
         /// Saves all changes made in this context to the database

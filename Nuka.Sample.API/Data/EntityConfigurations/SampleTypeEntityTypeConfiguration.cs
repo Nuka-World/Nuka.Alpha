@@ -5,7 +5,7 @@ using Nuka.Sample.API.Data.Entities;
 
 namespace Nuka.Sample.API.Data.EntityConfigurations
 {
-    public class SampleTypeEntityTypeConfiguration : BaseEntityTypeConfiguration<SampleType>
+    public class SampleTypeEntityTypeConfiguration : BusinessEntityTypeConfiguration<SampleType>
     {
         public override void Configure(EntityTypeBuilder<SampleType> builder)
         {
