@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nuka.Core.Mappers;
 using Nuka.Sample.API.Data.Entities;
+using Nuka.Sample.API.Models;
 using Nuka.Sample.API.Services;
 
 namespace Nuka.Sample.API.Controllers
@@ -35,7 +37,7 @@ namespace Nuka.Sample.API.Controllers
             
             _service.Insert(item);
 
-            return Json(item);
+            return Json(item.ToModel<SampleItemModel>());
         }
     }
 }

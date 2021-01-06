@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nuka.Core.Data.DBContext;
 using Nuka.Core.Data.Repositories;
+using Nuka.Core.Extensions;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
 using Nuka.Sample.API.Services;
@@ -47,6 +48,8 @@ namespace Nuka.Sample.API
             services.AddCustomHealthCheck(_configuration);
 
             services.AddControllers();
+            // Add AutoMapper
+            services.AddAutoMapper();
 
             // Use Autofac container
             var containers = new ContainerBuilder();
