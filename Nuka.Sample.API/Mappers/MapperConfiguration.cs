@@ -22,11 +22,8 @@ namespace Nuka.Sample.API.Mappers
 
         private void CreateSampleItemMaps()
         {
-            CreateMap<SampleItem, SampleItemModel>()
-                .ForMember(model => model.SampleType, options => options.Ignore());
-
-            CreateMap<SampleItemModel, SampleItem>()
-                .ForMember(entity => entity.SampleType, options => options.Ignore());
+            CreateMap<SampleItem, SampleItemModel>();
+            CreateMap<SampleItemModel, SampleItem>();
         }
 
         private void CreateSampleTypeMaps()

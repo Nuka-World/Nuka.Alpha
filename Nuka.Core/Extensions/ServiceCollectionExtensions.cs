@@ -17,7 +17,8 @@ namespace Nuka.Core.Extensions
 
             // Create instances of mapper configurations
             var instances = mapperConfigurations
-                .Select(mapperConfiguration => (IMapperProfile) Activator.CreateInstance(mapperConfiguration));
+                .Select(Activator.CreateInstance)
+                .Cast<IMapperProfile>();
 
             // Create AutoMapper configuration
             var config = new MapperConfiguration(cfg =>

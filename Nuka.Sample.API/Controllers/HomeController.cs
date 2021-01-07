@@ -23,19 +23,20 @@ namespace Nuka.Sample.API.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            _logger.LogInformation("Hello World!");
+            SampleItem item = _service.GetItemById(1);
 
-            var @type = new SampleType() {Type = "Sample"};
-
-            var item = new SampleItem()
+            if (item == null)
             {
-                Name = "Item01",
-                Description = "Desciption01",
-                Price = 10.01m,
-                SampleType = @type
-            };
-            
-            _service.Insert(item);
+                item = new SampleItem()
+                {
+                    ItemId = "00001",
+                    ItemName = "Item01",
+                    Description = "Desciption01",
+                    Price = 10.01m,
+                    SampleType = new SampleType() {Type = "Sample"}
+                };
+                _service.Insert(item);
+            }
 
             return Json(item.ToModel<SampleItemModel>());
         }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Nuka.Core.Data.Repositories;
 using Nuka.Sample.API.Data.Entities;
 
@@ -30,8 +32,23 @@ namespace Nuka.Sample.API.Services
         /// <summary>
         /// Inserts a sample item
         /// </summary>
+        /// <param name="id">ID</param>
+        public SampleItem GetItemById(int id)
+        {
+            if (id == 0)
+                return null;
+            
+            // Get Item By Id
+            var query = _sampleItemRepository.Table;
+            query = query.Include(@class => @class.SampleType);
+
+            return query.Single(item => item.Id == id);
+        }
+
+        /// <summary>
+        /// Inserts a sample item
+        /// </summary>
         /// <param name="item">Sample Item</param>
-        /// <param name="type">Sample Type</param>
         public void Insert(SampleItem item)
         {
             if (item == null)

@@ -11,6 +11,7 @@ namespace Nuka.Core.Data.EntityConfigurations
         {
             builder.HasKey(entity => entity.Id);
 
+            // TODO: How to generate column id?
             builder.Property(entity => entity.Id)
                 .HasColumnName("FID")
                 .ValueGeneratedOnAdd();

@@ -13,8 +13,12 @@ namespace Nuka.Sample.API.Data.EntityConfigurations
 
             builder.ToTable("ITEMM");
 
-            builder.Property(item => item.Name)
-                .HasColumnName("FNAME")
+            builder.Property(item => item.ItemId)
+                .HasColumnName("FITEMID")
+                .HasMaxLength(10);
+
+            builder.Property(item => item.ItemName)
+                .HasColumnName("FITEMNAME")
                 .IsRequired(true)
                 .HasMaxLength(50);
 

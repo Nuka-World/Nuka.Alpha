@@ -26,40 +26,6 @@ namespace Nuka.Core.Data.Repositories
 
         #endregion Ctor
 
-        #region Utilities
-
-        /// <summary>
-        /// Rollback of entity changes and return full error message
-        /// </summary>
-        /// <param name="exception">Exception</param>
-        /// <returns>Error message</returns>
-        private string GetFullErrorTextAndRollbackEntityChanges(DbUpdateException exception)
-        {
-            //rollback entity changes
-            if (_context is DbContext dbContext)
-            {
-                var entries = dbContext.ChangeTracker.Entries()
-                    .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified).ToList();
-
-                entries.ForEach(entry =>
-                {
-                    try
-                    {
-                        entry.State = EntityState.Unchanged;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // ignored
-                    }
-                });
-            }
-
-            _context.SaveChanges();
-            return exception.ToString();
-        }
-
-        #endregion Utilities
-
         #region Methods
 
         /// <summary>
@@ -81,16 +47,8 @@ namespace Nuka.Core.Data.Repositories
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            try
-            {
-                Entities.Add(entity);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+            Entities.Add(entity);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -102,16 +60,8 @@ namespace Nuka.Core.Data.Repositories
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            try
-            {
-                Entities.AddRange(entities);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+            Entities.AddRange(entities);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -123,16 +73,8 @@ namespace Nuka.Core.Data.Repositories
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            try
-            {
-                Entities.Update(entity);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+            Entities.Update(entity);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -144,16 +86,8 @@ namespace Nuka.Core.Data.Repositories
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            try
-            {
-                Entities.UpdateRange(entities);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+            Entities.UpdateRange(entities);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -165,16 +99,8 @@ namespace Nuka.Core.Data.Repositories
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            try
-            {
-                Entities.Remove(entity);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+            Entities.Remove(entity);
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -186,16 +112,8 @@ namespace Nuka.Core.Data.Repositories
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
-            try
-            {
-                Entities.RemoveRange(entities);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException exception)
-            {
-                //ensure that the detailed error text is saved in the Log
-                throw new Exception(GetFullErrorTextAndRollbackEntityChanges(exception), exception);
-            }
+            Entities.RemoveRange(entities);
+            _context.SaveChanges();
         }
 
         #endregion Methods

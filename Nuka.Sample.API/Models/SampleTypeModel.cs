@@ -2,7 +2,7 @@
 
 namespace Nuka.Sample.API.Models
 {
-    public class SampleTypeModel : BaseModel
+    public class SampleTypeModel : BusinessModel
     {
         #region Properties
 

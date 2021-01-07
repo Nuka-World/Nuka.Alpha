@@ -14,8 +14,8 @@ namespace Nuka.Sample.API.Models
         #endregion
         
         #region Properties
-        
-        public string Name { get; set; }
+        public string ItemId { get; set; }
+        public string ItemName { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
         public SampleTypeModel SampleType { get; set; }
