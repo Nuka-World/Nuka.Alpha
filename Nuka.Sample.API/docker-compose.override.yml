@@ -1,0 +1,18 @@
+﻿version: '3.4'
+
+services:
+  sqldata:
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5433:1433"
+
+  sample-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - ConnectionStrings__DefaultConnection=Server=sqldata;Database=Nuka.Sample.API;User Id=sa;Password=Pass@word
+    ports:
+      - "5001:80"
+      

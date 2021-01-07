@@ -37,12 +37,12 @@ namespace Nuka.Sample.API.Services
         {
             if (id == 0)
                 return null;
-            
+
             // Get Item By Id
             var query = _sampleItemRepository.Table;
             query = query.Include(@class => @class.SampleType);
 
-            return query.Single(item => item.Id == id);
+            return query.SingleOrDefault(item => item.Id == id);
         }
 
         /// <summary>
