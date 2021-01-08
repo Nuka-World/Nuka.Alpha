@@ -2,12 +2,13 @@
 
 namespace Nuka.Core.Data.Entities
 {
-    public abstract class BusinessEntity
+    public abstract class BusinessEntity : BaseEntity
     {
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
         public int Id { get; set; }
+
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
         public DateTime LastUpdatedAt { get; set; }

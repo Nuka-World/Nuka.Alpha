@@ -6,7 +6,7 @@ using Nuka.Core.Data.Entities;
 
 namespace Nuka.Core.Data.DBContext
 {
-    public abstract class BusinessDbContext : DbContext
+    public abstract class BusinessDbContext : BaseDbContext
     {
         protected BusinessDbContext(DbContextOptions options) : base(options)
         {

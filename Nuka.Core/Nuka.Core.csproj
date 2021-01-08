@@ -3,7 +3,10 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Description>Nuka.Core</Description>
+        <Description>Nuka Core Assembly</Description>
+        <Title>Nuka.Core</Title>
+        <Authors>utwoo</Authors>
+        <PackageTags>Nuka</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

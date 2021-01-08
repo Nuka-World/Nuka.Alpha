@@ -59,7 +59,7 @@ namespace Nuka.Sample.API
             containers.Register(context => new SampleDbContext(context.Resolve<DbContextOptions<SampleDbContext>>()))
                 .As<IDbContext>().InstancePerLifetimeScope();
             // Register Repositories
-            containers.RegisterGeneric(typeof(BusinessRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            containers.RegisterGeneric(typeof(CommonRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
             // Register Services
             containers.RegisterType<SampleService>().SingleInstance();
 

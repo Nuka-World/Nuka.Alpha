@@ -8,7 +8,7 @@ namespace Nuka.Core.Data.Repositories
     /// Represents an entity repository
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public partial interface IRepository<TEntity> where TEntity : BusinessEntity
+    public interface IRepository<TEntity> where TEntity : BusinessEntity
     {
         /// <summary>
         /// Gets a table
@@ -31,7 +31,7 @@ namespace Nuka.Core.Data.Repositories
         /// Insert entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        void Insert(TEntity entity);
+        TEntity Insert(TEntity entity);
 
         /// <summary>
         /// Insert entities
@@ -43,7 +43,7 @@ namespace Nuka.Core.Data.Repositories
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        void Update(TEntity entity);
+        TEntity Update(TEntity entity);
 
         /// <summary>
         /// Update entities

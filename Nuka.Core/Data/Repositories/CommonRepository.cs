@@ -7,7 +7,7 @@ using Nuka.Core.Data.Entities;
 
 namespace Nuka.Core.Data.Repositories
 {
-    public class BusinessRepository<TEntity> : IRepository<TEntity> where TEntity : BusinessEntity
+    public class CommonRepository<TEntity> : IRepository<TEntity> where TEntity : BusinessEntity
     {
         #region Fields
 
@@ -19,7 +19,7 @@ namespace Nuka.Core.Data.Repositories
 
         #region Ctor
 
-        public BusinessRepository(IDbContext context)
+        public CommonRepository(IDbContext context)
         {
             this._context = context;
         }
@@ -42,13 +42,15 @@ namespace Nuka.Core.Data.Repositories
         /// Insert entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        public void Insert(TEntity entity)
+        public TEntity Insert(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            Entities.Add(entity);
+            var entityEntry = Entities.Add(entity);
             _context.SaveChanges();
+            
+            return entityEntry.Entity;
         }
 
         /// <summary>
@@ -68,13 +70,15 @@ namespace Nuka.Core.Data.Repositories
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        public void Update(TEntity entity)
+        public TEntity Update(TEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            Entities.Update(entity);
+            var entityEntry = Entities.Update(entity);
             _context.SaveChanges();
+
+            return entityEntry.Entity;
         }
 
         /// <summary>
