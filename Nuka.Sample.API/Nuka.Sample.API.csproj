@@ -28,7 +28,22 @@
     </ItemGroup>
 	
 	<ItemGroup>
-	 <Protobuf Include="Grpc\Proto\Sample.proto" GrpcServices="Server" />
+	 <Protobuf Include="Grpc\Proto\Sample.proto">
+	   <GrpcServices>Server</GrpcServices>
+	   <Access>Public</Access>
+	   <ProtoCompile>True</ProtoCompile>
+	   <ProtoRoot></ProtoRoot>
+	   <CompileOutputs>True</CompileOutputs>
+	   <OutputDir>obj\Debug\net5.0\</OutputDir>
+	   <Generator>MSBuild:Compile</Generator>
+	 </Protobuf>
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Remove="Certificates\sample_api.pfx" />
+	  <Content Include="Certificates\sample_api.pfx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

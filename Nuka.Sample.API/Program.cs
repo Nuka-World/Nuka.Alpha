@@ -37,17 +37,26 @@ namespace Nuka.Sample.API
                 .CaptureStartupErrors(false)
                 .ConfigureKestrel(options =>
                 {
-                    var (httpPort, grpcPort) = GetDefinedPorts(configuration);
+                    var (httpPort, httsPort, grpcPort) = GetDefinedPorts(configuration);
                     options.Listen(IPAddress.Any, httpPort,
                         listenOptions =>
                         {
-                            listenOptions.UseHttps();
+                            listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                        });
+                    options.Listen(IPAddress.Any, httsPort,
+                        listenOptions =>
+                        {
+                            listenOptions.UseHttps(
+                                Path.Combine(Directory.GetCurrentDirectory(), "Certificates", "sample_api.pfx"),
+                                "P@ssw0rd");
                             listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
                         });
                     options.Listen(IPAddress.Any, grpcPort,
                         listenOptions =>
                         {
-                            listenOptions.UseHttps();
+                            listenOptions.UseHttps(
+                                Path.Combine(Directory.GetCurrentDirectory(), "Certificates", "sample_api.pfx"),
+                                "P@ssw0rd");
                             listenOptions.Protocols = HttpProtocols.Http2;
                         });
                 })
@@ -77,11 +86,12 @@ namespace Nuka.Sample.API
             return builder.Build();
         }
 
-        private static (int httpPort, int grpcPort) GetDefinedPorts(IConfiguration configuration)
+        private static (int httpPort, int httsPort, int grpcPort) GetDefinedPorts(IConfiguration configuration)
         {
+            var httpPort = configuration.GetValue("HTTP_PORT", 80);
+            var httpsPort = configuration.GetValue("HTTPS_PORT", 443);
             var grpcPort = configuration.GetValue("GRPC_PORT", 81);
-            var port = configuration.GetValue("PORT", 80);
-            return (port, grpcPort);
+            return (httpPort, httpsPort, grpcPort);
         }
     }
 }
