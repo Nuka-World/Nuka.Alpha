@@ -1,6 +1,8 @@
 using System.IO;
+using System.Net;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
@@ -33,6 +35,22 @@ namespace Nuka.Sample.API
         private static IWebHostBuilder CreateHostBuilder(IConfiguration configuration, string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .CaptureStartupErrors(false)
+                .ConfigureKestrel(options =>
+                {
+                    var (httpPort, grpcPort) = GetDefinedPorts(configuration);
+                    options.Listen(IPAddress.Any, httpPort,
+                        listenOptions =>
+                        {
+                            listenOptions.UseHttps();
+                            listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                        });
+                    options.Listen(IPAddress.Any, grpcPort,
+                        listenOptions =>
+                        {
+                            listenOptions.UseHttps();
+                            listenOptions.Protocols = HttpProtocols.Http2;
+                        });
+                })
                 .ConfigureAppConfiguration(x => x.AddConfiguration(configuration))
                 .UseStartup<Startup>()
                 .UseContentRoot(Directory.GetCurrentDirectory())
@@ -57,6 +75,13 @@ namespace Nuka.Sample.API
                 .AddEnvironmentVariables();
 
             return builder.Build();
+        }
+
+        private static (int httpPort, int grpcPort) GetDefinedPorts(IConfiguration configuration)
+        {
+            var grpcPort = configuration.GetValue("GRPC_PORT", 81);
+            var port = configuration.GetValue("PORT", 80);
+            return (port, grpcPort);
         }
     }
 }

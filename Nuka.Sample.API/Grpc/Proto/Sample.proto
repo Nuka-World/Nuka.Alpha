@@ -1,0 +1,25 @@
+﻿syntax = "proto3";
+
+package Nuke.Sample.API.Grpc;
+
+message SampleItemRequest{
+  int32 id = 1;
+}
+
+message SampleItemResponse{
+  int32 id = 1;
+  string item_id = 2;
+  string item_name = 3;
+  string description = 4;
+  double price = 5;
+  SampleType sample_type = 6;
+}
+
+message SampleType {
+  int32 id = 1;
+  string type = 2;
+}
+
+service SampleProtoServer {
+  rpc GetItemById (SampleItemRequest) returns (SampleItemResponse) {}
+}

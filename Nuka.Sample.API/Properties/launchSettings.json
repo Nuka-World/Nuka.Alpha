@@ -4,9 +4,10 @@
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": false,
-      "applicationUrl": "https://+:5001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
+        "PORT": "5001",
+        "GRPC_PORT": "9001",
         "ConnectionStrings__DefaultConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;database=Nuka.Sample.API;trusted_connection=yes;"
       }
     }

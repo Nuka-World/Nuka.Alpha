@@ -11,7 +11,8 @@ services:
   sample-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      - PORT=80
+      - GRPC_PORT=81
       - ConnectionStrings__DefaultConnection=Server=sqldata;Database=Nuka.Sample.API;User Id=sa;Password=Pass@word
     ports:
       - "5001:80"
