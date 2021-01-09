@@ -15,6 +15,7 @@ using Nuka.Core.Data.Repositories;
 using Nuka.Core.Extensions;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
+using Nuka.Sample.API.Grpc.Services;
 using Nuka.Sample.API.Services;
 
 namespace Nuka.Sample.API
@@ -47,6 +48,9 @@ namespace Nuka.Sample.API
 
             services.AddCustomHealthCheck(_configuration);
 
+            // Add Grpc
+            services.AddGrpc();
+            // Add Controllers
             services.AddControllers();
             // Add AutoMapper
             services.AddAutoMapper();
@@ -79,6 +83,7 @@ namespace Nuka.Sample.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+                endpoints.MapGrpcService<SampleGrpcService>();
                 endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
                 {
                     Predicate = _ => true,

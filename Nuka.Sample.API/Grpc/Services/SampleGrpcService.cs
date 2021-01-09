@@ -6,14 +6,14 @@ using Nuke.Sample.API.Grpc;
 
 namespace Nuka.Sample.API.Grpc.Services
 {
-    public class SampleGrpcService : SampleProtoServer.SampleProtoServerBase
+    public class SampleGrpcService : SampleServer.SampleServerBase
     {
         private readonly SampleService _service;
-        private readonly Logger<SampleGrpcService> _logger;
+        private readonly ILogger<SampleGrpcService> _logger;
 
         public SampleGrpcService(
             SampleService service,
-            Logger<SampleGrpcService> logger)
+            ILogger<SampleGrpcService> logger)
         {
             _service = service;
             _logger = logger;
@@ -36,7 +36,7 @@ namespace Nuka.Sample.API.Grpc.Services
                 ItemName = item.ItemName,
                 Description = item.Description,
                 Price = (double) item.Price,
-                SampleType = new Nuke.Sample.API.Grpc.SampleType()
+                SampleType = new SampleType()
                 {
                     Id = item.SampleTypeId,
                     Type = item.SampleType.Type

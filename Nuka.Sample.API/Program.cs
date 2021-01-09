@@ -4,6 +4,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
+using Nuka.Sample.API.Certificates;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
 using Serilog;
@@ -39,24 +40,17 @@ namespace Nuka.Sample.API
                 {
                     var (httpPort, httsPort, grpcPort) = GetDefinedPorts(configuration);
                     options.Listen(IPAddress.Any, httpPort,
-                        listenOptions =>
-                        {
-                            listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-                        });
+                        listenOptions => { listenOptions.Protocols = HttpProtocols.Http1AndHttp2; });
                     options.Listen(IPAddress.Any, httsPort,
                         listenOptions =>
                         {
-                            listenOptions.UseHttps(
-                                Path.Combine(Directory.GetCurrentDirectory(), "Certificates", "sample_api.pfx"),
-                                "P@ssw0rd");
+                            listenOptions.UseHttps(Certificate.Get());
                             listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
                         });
                     options.Listen(IPAddress.Any, grpcPort,
                         listenOptions =>
                         {
-                            listenOptions.UseHttps(
-                                Path.Combine(Directory.GetCurrentDirectory(), "Certificates", "sample_api.pfx"),
-                                "P@ssw0rd");
+                            listenOptions.UseHttps(Certificate.Get());
                             listenOptions.Protocols = HttpProtocols.Http2;
                         });
                 })

@@ -41,9 +41,9 @@
 	
 	<ItemGroup>
 	  <None Remove="Certificates\sample_api.pfx" />
-	  <Content Include="Certificates\sample_api.pfx">
+	  <EmbeddedResource Include="Certificates\sample_api.pfx">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Content>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 </Project>
