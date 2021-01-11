@@ -7,7 +7,6 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "HTTP_PORT": "5001",
-        "HTTPS_PORT": "5401",
         "GRPC_PORT": "9001",
         "ConnectionStrings__DefaultConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;database=Nuka.Sample.API;trusted_connection=yes;"
       }

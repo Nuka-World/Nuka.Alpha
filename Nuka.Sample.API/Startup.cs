@@ -46,12 +46,12 @@ namespace Nuka.Sample.API
                 });
             });
 
+            // Add Health Check
             services.AddCustomHealthCheck(_configuration);
-
-            // Add Grpc
-            services.AddGrpc();
             // Add Controllers
             services.AddControllers();
+            // Add Grpc Components
+            services.AddGrpc();
             // Add AutoMapper
             services.AddAutoMapper();
 
@@ -83,7 +83,9 @@ namespace Nuka.Sample.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
+                // Map Grpc Service endpoint
                 endpoints.MapGrpcService<SampleGrpcService>();
+                // Map Health Check endpoint
                 endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
                 {
                     Predicate = _ => true,
