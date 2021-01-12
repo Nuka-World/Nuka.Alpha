@@ -1,14 +1,10 @@
 using System.IO;
-using System.Net;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
-using Nuka.Sample.API.Data;
-using Nuka.Sample.API.Extensions;
 using Serilog;
 
-namespace Nuka.Sample.API
+namespace Nuka.Sample.HttpAggregator
 {
     public class Program
     {
@@ -22,10 +18,7 @@ namespace Nuka.Sample.API
 
             Log.Information("Configuring web host ({ApplicationContext})...", AppName);
             var host = CreateHostBuilder(configuration, args).Build();
-
-            Log.Information("Applying web host ({ApplicationContext})...", AppName);
-            host.MigrateDbContext<SampleDbContext>();
-
+            
             Log.Information("Starting web host ({ApplicationContext})...", AppName);
             host.Run();
 
@@ -35,14 +28,6 @@ namespace Nuka.Sample.API
         private static IWebHostBuilder CreateHostBuilder(IConfiguration configuration, string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .CaptureStartupErrors(false)
-                .ConfigureKestrel(options =>
-                {
-                    var (httpPort, grpcPort) = GetDefinedPorts(configuration);
-                    options.Listen(IPAddress.Any, httpPort,
-                        listenOptions => { listenOptions.Protocols = HttpProtocols.Http1AndHttp2; });
-                    options.Listen(IPAddress.Any, grpcPort,
-                        listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
-                })
                 .ConfigureAppConfiguration(x => x.AddConfiguration(configuration))
                 .UseStartup<Startup>()
                 .UseContentRoot(Directory.GetCurrentDirectory())
@@ -67,13 +52,6 @@ namespace Nuka.Sample.API
                 .AddEnvironmentVariables();
 
             return builder.Build();
-        }
-
-        private static (int httpPort, int grpcPort) GetDefinedPorts(IConfiguration configuration)
-        {
-            var httpPort = configuration.GetValue("HTTP_PORT", 80);
-            var grpcPort = configuration.GetValue("GRPC_PORT", 81);
-            return (httpPort, grpcPort);
         }
     }
 }

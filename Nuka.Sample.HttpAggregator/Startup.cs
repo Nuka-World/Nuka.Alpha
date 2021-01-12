@@ -1,0 +1,78 @@
+using System;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
+using Nuka.Sample.HttpAggregator.Configurations;
+using Nuka.Sample.HttpAggregator.Extensions;
+
+namespace Nuka.Sample.HttpAggregator
+{
+    public class Startup
+    {
+        private readonly IConfiguration _configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            services.Configure<UrlsConfig>(_configuration.GetSection("URLS"));
+
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddUrlGroup(
+                    uri: new Uri(_configuration["URLS:SampleApiHealthCheckUrl"]),
+                    name: "sample-api-check",
+                    tags: new string[] {"sample-api"});
+
+            services
+                .AddCustomMvc(_configuration)
+                .AddApplicationServices(_configuration);
+
+            // Add Controllers
+            services.AddControllers();
+
+            // Use Autofac container
+            var containers = new ContainerBuilder();
+            containers.Populate(services);
+
+            return new AutofacServiceProvider(containers.Build());
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
+                {
+                    Predicate = r => r.Name.Contains("self")
+                });
+            });
+        }
+    }
+}

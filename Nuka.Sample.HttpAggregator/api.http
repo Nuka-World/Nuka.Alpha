@@ -1,0 +1,2 @@
+﻿### Access Sample.API
+GET http://localhost:5101/Sample/Item/1
