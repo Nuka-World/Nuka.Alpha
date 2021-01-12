@@ -32,6 +32,13 @@ static_resources:
                             auto_host_rewrite: true
                             prefix_rewrite: "/"
                             cluster: sample-api
+                        - name: "sample-aggr"
+                          match:
+                            prefix: "/sample-aggr/"
+                          route:
+                            auto_host_rewrite: true
+                            prefix_rewrite: "/"
+                            cluster: sample-aggr
                 http_filters:
                   - name: envoy.router
                 access_log:
@@ -60,4 +67,12 @@ static_resources:
       hosts:
         - socket_address:
             address: sample-api
+            port_value: 80
+    - name: sample-aggr
+      connect_timeout: 0.25s
+      type: strict_dns
+      lb_policy: round_robin
+      hosts:
+        - socket_address:
+            address: sample-aggr
             port_value: 80

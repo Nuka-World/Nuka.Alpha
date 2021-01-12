@@ -1,2 +1,5 @@
 ﻿### Access Sample.API
 GET http://localhost:5101/Sample/Item/1
+
+### Test in Gateway
+GET http://localhost:5200/sample-aggr/Sample/Item/1

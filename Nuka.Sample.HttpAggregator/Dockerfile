@@ -2,7 +2,6 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 81
 
 ## Build
 FROM mcr.microsoft.com/dotnet/core/sdk:5.0 AS build
@@ -15,4 +14,4 @@ RUN dotnet publish -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app .
-ENTRYPOINT ["dotnet", "Nuka.Sample.API.dll"]
+ENTRYPOINT ["dotnet", "Nuka.Sample.HttpAggregator.dll"]

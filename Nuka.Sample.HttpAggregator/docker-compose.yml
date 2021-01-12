@@ -1,0 +1,8 @@
+﻿version: '3.4'
+
+services:
+  sample-aggr:
+    image: nuka/sample.aggr
+    build:
+      context: .
+      dockerfile: ./Dockerfile
