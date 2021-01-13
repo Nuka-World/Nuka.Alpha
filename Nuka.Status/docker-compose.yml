@@ -2,7 +2,7 @@
 
 services:
   webstatus:
-    image: nuka/webstatus
+    image: zhuxiang1212/nuka.webstatus
     build:
       context: .
       dockerfile: ./Dockerfile

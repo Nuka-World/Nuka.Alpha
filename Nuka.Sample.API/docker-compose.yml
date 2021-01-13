@@ -5,7 +5,7 @@ services:
     image: mcr.microsoft.com/mssql/server:2017-latest
 
   sample-api:
-    image: nuka/sample.api
+    image: zhuxiang1212/nuka.sample.api
     build:
       context: .
       dockerfile: ./Dockerfile
