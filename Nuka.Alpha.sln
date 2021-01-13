@@ -12,8 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuka.ApiGateways", "Nuka.Ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Envoy", "Envoy", "{E391D385-FC95-4B62-9810-ADB8AB3DB8E2}"
 ProjectSection(SolutionItems) = preProject
-	Nuka.ApiGateways\Envoy\docker-compose.yml = Nuka.ApiGateways\Envoy\docker-compose.yml
 	Nuka.ApiGateways\Envoy\docker-compose.override.yml = Nuka.ApiGateways\Envoy\docker-compose.override.yml
+	Nuka.ApiGateways\Envoy\docker-compose.yml = Nuka.ApiGateways\Envoy\docker-compose.yml
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{349C1173-4B89-4DBB-8A6D-91E35B5DCF86}"

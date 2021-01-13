@@ -1,0 +1,8 @@
+﻿version: '3.4'
+
+services:
+  webstatus:
+    image: nuka/webstatus
+    build:
+      context: .
+      dockerfile: ./Dockerfile

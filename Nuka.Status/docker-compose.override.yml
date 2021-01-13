@@ -1,0 +1,21 @@
+﻿version: '3.4'
+
+services:
+  webstatus:
+    image: nuka/webstatus
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - HealthChecksUI__HealthChecks__0__Name=Nuka.Identity.API
+      - HealthChecksUI__HealthChecks__0__Uri=https://identity-api/hc
+      - HealthChecksUI__HealthChecks__1__Name=Nuka.Sample.API
+      - HealthChecksUI__HealthChecks__1__Uri=http://sample-api/hc
+      - HealthChecksUI__HealthChecks__2__Name=Nuka.Sample.HttpAggregator
+      - HealthChecksUI__HealthChecks__2__Uri=http://sample-aggr/hc
+    ports:
+      - "5300:80"
+    networks:
+      - nuka-network
+
+networks:
+  nuka-network:
+    external: true
