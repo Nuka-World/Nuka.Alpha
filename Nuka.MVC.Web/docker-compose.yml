@@ -1,8 +1,8 @@
 ﻿version: '3.4'
 
 services:
-  sample-api:
-    image: zhuxiang1212/nuka.sample.api
+  mvc-web:
+    image: zhuxiang1212/nuka.mvc.web
     build:
       context: .
       dockerfile: ./Dockerfile

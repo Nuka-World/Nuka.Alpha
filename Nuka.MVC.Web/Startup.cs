@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Nuka.MVC.Web.Configurations;
+using Nuka.MVC.Web.Services;
 
 namespace Nuka.MVC.Web
 {
@@ -42,6 +43,8 @@ namespace Nuka.MVC.Web
             // Add MVC
             services.AddMvc()
                 .AddNewtonsoftJson();
+
+            services.AddSingleton<SampleService>();
 
             var containers = new ContainerBuilder();
             containers.Populate(services);

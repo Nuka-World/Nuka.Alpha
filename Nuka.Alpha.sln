@@ -27,6 +27,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Sample.HttpAggregator"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.MVC.Web", "Nuka.MVC.Web\Nuka.MVC.Web.csproj", "{8288F9A4-98FC-4CA9-A246-95EE70646662}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dockerfiles", "Dockerfiles", "{CA113620-1F55-4358-87A8-95101725AD64}"
+ProjectSection(SolutionItems) = preProject
+	Dockerfiles\docker-compose.override.yml = Dockerfiles\docker-compose.override.yml
+	Dockerfiles\docker-compose.yml = Dockerfiles\docker-compose.yml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

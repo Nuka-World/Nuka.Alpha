@@ -1,0 +1,16 @@
+﻿version: '3.4'
+
+services:
+  mvc-web:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - URLS__IdentityApiHealthCheckUrl=https://identity-api/hc
+      - URLS__SampleApiUrl=http://sampleapigw/sample-aggr
+    ports:
+      - "5500:80"
+    networks:
+      - nuka-network
+
+networks:
+  nuka-network:
+    external: true
