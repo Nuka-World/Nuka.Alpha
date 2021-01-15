@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nuka.MVC.Web.Services;
@@ -17,7 +18,14 @@ namespace Nuka.MVC.Web.Controllers
             _service = service;
             _logger = logger;
         }
+        
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return Json("Hello World.");
+        }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Item([FromRoute] int id)
         {

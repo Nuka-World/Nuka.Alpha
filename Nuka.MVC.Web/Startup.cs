@@ -2,6 +2,8 @@ using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Nuka.MVC.Web.Configurations;
 using Nuka.MVC.Web.Services;
 
@@ -44,11 +47,35 @@ namespace Nuka.MVC.Web
             services.AddMvc()
                 .AddNewtonsoftJson();
 
+            // Add Services
             services.AddSingleton<SampleService>();
+            
+            // Add Authentication
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+                .AddCookie()
+                .AddOpenIdConnect(options =>
+                {
+                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.Authority = _configuration["URLS:IdentityApiUrl"];
+                    options.RequireHttpsMetadata = true;
+                    options.ClientId = "mvc_web";
+                    options.ClientSecret = "mvc_secret";
+                    options.ResponseType = OpenIdConnectResponseType.CodeIdTokenToken;
+                    options.SignedOutRedirectUri = _configuration["URLS:CallBackUrl"];
+                    options.SaveTokens = true;
+                    options.GetClaimsFromUserInfoEndpoint = true;
+                    options.Scope.Add("sample.aggregator.access");
+                    options.Scope.Add("sample.api.access");
+                    options.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(0);
+                });
 
             var containers = new ContainerBuilder();
             containers.Populate(services);
-            
+
             return new AutofacServiceProvider(containers.Build());
         }
 
@@ -61,6 +88,9 @@ namespace Nuka.MVC.Web
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

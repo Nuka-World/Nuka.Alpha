@@ -13,7 +13,7 @@ namespace Nuka.Identity.API.Data
         {
             if (!context.Clients.Any())
             {
-                foreach (var client in Config.Clients)
+                foreach (var client in Config.GetClients(configuration))
                 {
                     await context.Clients.AddAsync(client.ToEntity());
                 }
@@ -23,7 +23,7 @@ namespace Nuka.Identity.API.Data
 
             if (!context.ApiScopes.Any())
             {
-                foreach (var scope in Config.ApiScopes)
+                foreach (var scope in Config.GetApiScopes())
                 {
                     await context.ApiScopes.AddAsync(scope.ToEntity());
                 }
@@ -33,7 +33,7 @@ namespace Nuka.Identity.API.Data
 
             if (!context.IdentityResources.Any())
             {
-                foreach (var resource in Config.IdentityResources)
+                foreach (var resource in Config.GetIdentityResources())
                 {
                     await context.IdentityResources.AddAsync(resource.ToEntity());
                 }
@@ -43,7 +43,7 @@ namespace Nuka.Identity.API.Data
 
             if (!context.ApiResources.Any())
             {
-                foreach (var api in Config.ApiResources)
+                foreach (var api in Config.GetApiResources())
                 {
                     await context.ApiResources.AddAsync(api.ToEntity());
                 }

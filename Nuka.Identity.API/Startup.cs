@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Nuka.Identity.API.Certificates;
+using Nuka.Identity.API.Configurations;
 using Nuka.Identity.API.Data;
 
 namespace Nuka.Identity.API
@@ -40,47 +41,56 @@ namespace Nuka.Identity.API
                     tags: new string[] {"IdentityDB"});
 
             // Add IdentityData and persistent 
-            services.AddDbContext<ApplicationDbContext>(builder =>
-            {
-                builder.UseSqlServer(connectionString, optionsBuilder =>
-                {
-                    optionsBuilder.MigrationsAssembly(migrationAssembly);
-                    optionsBuilder.EnableRetryOnFailure(15, TimeSpan.FromSeconds(30), null);
-                });
-            });
+            // services.AddDbContext<ApplicationDbContext>(builder =>
+            // {
+            //     builder.UseSqlServer(connectionString, optionsBuilder =>
+            //     {
+            //         optionsBuilder.MigrationsAssembly(migrationAssembly);
+            //         optionsBuilder.EnableRetryOnFailure(15, TimeSpan.FromSeconds(30), null);
+            //     });
+            // });
+            //
+            // services.AddIdentity<IdentityUser, IdentityRole>()
+            //     .AddEntityFrameworkStores<ApplicationDbContext>()
+            //     .AddDefaultTokenProviders();
+            //
+            // // Add IdentityServer and persistent
+            // services.AddIdentityServer()
+            //     .AddSigningCredential(Certificate.Get())
+            //     .AddTestUsers(Config.GetUsers())
+            //     .AddAspNetIdentity<IdentityUser>()
+            //     .AddConfigurationStore(options =>
+            //     {
+            //         options.ConfigureDbContext = builder =>
+            //             builder.UseSqlServer(
+            //                 connectionString,
+            //                 optionsBuilder =>
+            //                 {
+            //                     optionsBuilder.MigrationsAssembly(migrationAssembly);
+            //                     optionsBuilder.EnableRetryOnFailure(15, TimeSpan.FromSeconds(30), null);
+            //                 }
+            //             );
+            //     })
+            //     .AddOperationalStore(options =>
+            //     {
+            //         options.ConfigureDbContext = builder =>
+            //             builder.UseSqlServer(
+            //                 connectionString,
+            //                 optionsBuilder =>
+            //                 {
+            //                     optionsBuilder.MigrationsAssembly(migrationAssembly);
+            //                     optionsBuilder.EnableRetryOnFailure(15, TimeSpan.FromSeconds(30), null);
+            //                 }
+            //             );
+            //     });
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
-            // Add IdentityServer and persistent
             services.AddIdentityServer()
                 .AddSigningCredential(Certificate.Get())
-                .AddAspNetIdentity<IdentityUser>()
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(
-                            connectionString,
-                            optionsBuilder =>
-                            {
-                                optionsBuilder.MigrationsAssembly(migrationAssembly);
-                                optionsBuilder.EnableRetryOnFailure(15, TimeSpan.FromSeconds(30), null);
-                            }
-                        );
-                })
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(
-                            connectionString,
-                            optionsBuilder =>
-                            {
-                                optionsBuilder.MigrationsAssembly(migrationAssembly);
-                                optionsBuilder.EnableRetryOnFailure(15, TimeSpan.FromSeconds(30), null);
-                            }
-                        );
-                });
+                .AddInMemoryClients(Config.GetClients(_configuration))
+                .AddInMemoryApiResources(Config.GetApiResources())
+                .AddInMemoryApiScopes(Config.GetApiScopes())
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddTestUsers(Config.GetUsers());
 
             services.AddControllersWithViews();
 
