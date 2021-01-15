@@ -13,6 +13,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Nuka.MVC.Web.Configurations;
+using Nuka.MVC.Web.Infrastructure;
 using Nuka.MVC.Web.Services;
 
 namespace Nuka.MVC.Web
@@ -46,6 +47,9 @@ namespace Nuka.MVC.Web
             // Add MVC
             services.AddMvc()
                 .AddNewtonsoftJson();
+            
+            // Add HttpContext
+            services.AddHttpContextAccessor();
 
             // Add Services
             services.AddSingleton<SampleService>();
@@ -72,6 +76,11 @@ namespace Nuka.MVC.Web
                     options.Scope.Add("sample.api.access");
                     options.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(0);
                 });
+
+            // Add Http Clients
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+            services.AddHttpClient<SampleService>()
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
             var containers = new ContainerBuilder();
             containers.Populate(services);

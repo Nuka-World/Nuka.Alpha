@@ -22,11 +22,11 @@ namespace Nuka.MVC.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return Json("Hello World.");
+            return Json("Hello World!");
         }
-
-        [Authorize]
+        
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Item([FromRoute] int id)
         {
             var model = await _service.GetSampleItemByIdAsync(id);

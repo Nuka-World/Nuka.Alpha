@@ -2,6 +2,9 @@ using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Nuka.Sample.HttpAggregator.Configurations;
 using Nuka.Sample.HttpAggregator.Extensions;
 
@@ -29,6 +33,7 @@ namespace Nuka.Sample.HttpAggregator
         {
             services.Configure<UrlsConfig>(_configuration.GetSection("URLS"));
 
+            // Add Health Check
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddUrlGroup(
@@ -36,12 +41,25 @@ namespace Nuka.Sample.HttpAggregator
                     name: "sample-api-check",
                     tags: new string[] {"sample-api"});
 
+            // Add MVC
             services
                 .AddCustomMvc(_configuration)
                 .AddApplicationServices(_configuration);
 
             // Add Controllers
             services.AddControllers();
+
+            // Add Authentication
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.Audience = "sample.aggregator";
+                    options.Authority = _configuration["URLS:IdentityApiUrl"];
+                });
 
             // Use Autofac container
             var containers = new ContainerBuilder();
@@ -59,6 +77,9 @@ namespace Nuka.Sample.HttpAggregator
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

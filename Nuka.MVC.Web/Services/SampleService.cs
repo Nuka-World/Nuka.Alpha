@@ -1,5 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -26,7 +28,6 @@ namespace Nuka.MVC.Web.Services
 
         public async Task<SampleItemModel> GetSampleItemByIdAsync(int id)
         {
-            _logger.LogInformation($"{_urlsConfig.SampleApiUrl}/Sample/Item/{id}");
             var httpResponseMessage = await _httpClient.GetStringAsync($"{_urlsConfig.SampleApiUrl}/Sample/Item/{id}");
             return JsonConvert.DeserializeObject<SampleItemModel>(httpResponseMessage);
         }

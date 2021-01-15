@@ -5,7 +5,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - URLS__IdentityApiHealthCheckUrl=https://identity-api/hc
+      - URLS__IdentityApiUrl=https://identity-api
       - URLS__SampleApiUrl=http://sampleapigw/sample-aggr
+      - URLS__CallBackUrl=https://mvc-web
     ports:
       - "5500:80"
     networks:

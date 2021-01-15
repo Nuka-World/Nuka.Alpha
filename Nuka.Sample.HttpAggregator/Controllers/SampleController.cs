@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nuka.Sample.HttpAggregator.Models;
@@ -19,6 +20,7 @@ namespace Nuka.Sample.HttpAggregator.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<SampleItemModel>> Item([FromRoute] int id)
         {
