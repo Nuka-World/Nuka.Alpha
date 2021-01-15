@@ -14,7 +14,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Nuka.MVC.Web.Configurations;
 using Nuka.MVC.Web.Infrastructure;
+using Nuka.MVC.Web.Refit;
 using Nuka.MVC.Web.Services;
+using Refit;
 
 namespace Nuka.MVC.Web
 {
@@ -47,13 +49,10 @@ namespace Nuka.MVC.Web
             // Add MVC
             services.AddMvc()
                 .AddNewtonsoftJson();
-            
-            // Add HttpContext
-            services.AddHttpContextAccessor();
 
             // Add Services
             services.AddSingleton<SampleService>();
-            
+
             // Add Authentication
             services.AddAuthentication(options =>
                 {
@@ -77,9 +76,13 @@ namespace Nuka.MVC.Web
                     options.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(0);
                 });
 
-            // Add Http Clients
+            // Add HttpContext
+            services.AddHttpContextAccessor();
+            // Add Delegating Handler
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
-            services.AddHttpClient<SampleService>()
+            // Add Refits
+            services.AddRefitClient<ISampleApi>()
+                .ConfigureHttpClient(client => { client.BaseAddress = new Uri(_configuration["URLS:SampleApiUrl"]); })
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
             var containers = new ContainerBuilder();
