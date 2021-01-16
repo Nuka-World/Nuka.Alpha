@@ -1,0 +1,6 @@
+﻿### Test Service
+GET http://localhost:5001/Home/Index
+
+
+### Test in Gateway
+GET http://localhost:5200/sample/Home/Index

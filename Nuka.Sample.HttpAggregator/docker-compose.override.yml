@@ -1,0 +1,16 @@
+﻿version: '3.4'
+
+services:
+  sample-aggr:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - URLS__SampleApiHealthCheckUrl=http://sample-api/hc
+      - URLS__SampleApiGrpcUrl=http://sample-api:81
+    ports:
+      - "5101:80"
+    networks:
+      - nuka-network
+
+networks:
+  nuka-network:
+    external: true

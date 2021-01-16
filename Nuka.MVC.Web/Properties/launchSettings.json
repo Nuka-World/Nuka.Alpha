@@ -1,0 +1,17 @@
+﻿{
+  "profiles": {
+    "Nuka.MVC.Web": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "launchBrowser": false,
+      "applicationUrl": "https://localhost:5500",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "URLS__IdentityApiHealthCheckUrl": "https://localhost:5000/hc",
+        "URLS__IdentityApiUrl": "https://localhost:5000",
+        "URLS__SampleApiUrl": "http://localhost:5101",
+        "URLS__CallBackUrl": "https://localhost:5500"
+      }
+    }
+  }
+}

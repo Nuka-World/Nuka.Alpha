@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Identity.API", "Nuka.Identity.API\Nuka.Identity.API.csproj", "{3875C993-AE66-4992-907A-BA3D55DC82C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Status", "Nuka.Status\Nuka.Status.csproj", "{77145969-BAAF-432D-B7D9-DBEB521BFE02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Sample.API", "Nuka.Sample.API\Nuka.Sample.API.csproj", "{39E13B22-F941-4A29-B5D2-67B9004FB468}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Core", "Nuka.Core\Nuka.Core.csproj", "{A31087A2-DAFB-4407-9783-729D749BA369}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuka.ApiGateways", "Nuka.ApiGateways", "{4EF09C42-0314-4825-A34C-3EBA2C6743D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Envoy", "Envoy", "{E391D385-FC95-4B62-9810-ADB8AB3DB8E2}"
+ProjectSection(SolutionItems) = preProject
+	Nuka.ApiGateways\Envoy\docker-compose.override.yml = Nuka.ApiGateways\Envoy\docker-compose.override.yml
+	Nuka.ApiGateways\Envoy\docker-compose.yml = Nuka.ApiGateways\Envoy\docker-compose.yml
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{349C1173-4B89-4DBB-8A6D-91E35B5DCF86}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{CE60803C-4E37-4CD0-8CF7-241ADDB80D0D}"
+ProjectSection(SolutionItems) = preProject
+	Nuka.ApiGateways\Envoy\config\sample\envoy.yaml = Nuka.ApiGateways\Envoy\config\sample\envoy.yaml
+EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Sample.HttpAggregator", "Nuka.Sample.HttpAggregator\Nuka.Sample.HttpAggregator.csproj", "{0BCEC50B-0B36-42DD-B9A3-924E9015C52A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.MVC.Web", "Nuka.MVC.Web\Nuka.MVC.Web.csproj", "{8288F9A4-98FC-4CA9-A246-95EE70646662}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dockerfiles", "Dockerfiles", "{CA113620-1F55-4358-87A8-95101725AD64}"
+ProjectSection(SolutionItems) = preProject
+	Dockerfiles\docker-compose.override.yml = Dockerfiles\docker-compose.override.yml
+	Dockerfiles\docker-compose.yml = Dockerfiles\docker-compose.yml
+EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3875C993-AE66-4992-907A-BA3D55DC82C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3875C993-AE66-4992-907A-BA3D55DC82C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3875C993-AE66-4992-907A-BA3D55DC82C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3875C993-AE66-4992-907A-BA3D55DC82C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77145969-BAAF-432D-B7D9-DBEB521BFE02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77145969-BAAF-432D-B7D9-DBEB521BFE02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77145969-BAAF-432D-B7D9-DBEB521BFE02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77145969-BAAF-432D-B7D9-DBEB521BFE02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39E13B22-F941-4A29-B5D2-67B9004FB468}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39E13B22-F941-4A29-B5D2-67B9004FB468}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39E13B22-F941-4A29-B5D2-67B9004FB468}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39E13B22-F941-4A29-B5D2-67B9004FB468}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A31087A2-DAFB-4407-9783-729D749BA369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A31087A2-DAFB-4407-9783-729D749BA369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A31087A2-DAFB-4407-9783-729D749BA369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A31087A2-DAFB-4407-9783-729D749BA369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BCEC50B-0B36-42DD-B9A3-924E9015C52A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BCEC50B-0B36-42DD-B9A3-924E9015C52A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BCEC50B-0B36-42DD-B9A3-924E9015C52A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BCEC50B-0B36-42DD-B9A3-924E9015C52A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8288F9A4-98FC-4CA9-A246-95EE70646662}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8288F9A4-98FC-4CA9-A246-95EE70646662}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8288F9A4-98FC-4CA9-A246-95EE70646662}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8288F9A4-98FC-4CA9-A246-95EE70646662}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E391D385-FC95-4B62-9810-ADB8AB3DB8E2} = {4EF09C42-0314-4825-A34C-3EBA2C6743D3}
+		{349C1173-4B89-4DBB-8A6D-91E35B5DCF86} = {E391D385-FC95-4B62-9810-ADB8AB3DB8E2}
+		{CE60803C-4E37-4CD0-8CF7-241ADDB80D0D} = {349C1173-4B89-4DBB-8A6D-91E35B5DCF86}
+	EndGlobalSection
+EndGlobal

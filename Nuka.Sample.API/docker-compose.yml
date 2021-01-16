@@ -1,0 +1,8 @@
+﻿version: '3.4'
+
+services:
+  sample-api:
+    image: zhuxiang1212/nuka.sample.api
+    build:
+      context: .
+      dockerfile: ./Dockerfile

@@ -1,0 +1,15 @@
+﻿version: '3.4'
+
+services:
+  sampleapigw:
+    volumes:
+      - ./config/sample:/etc/envoy
+    ports:
+      - "5200:80"
+      - "15200:8001"
+    networks: 
+      - nuka-network
+
+networks:
+  nuka-network:
+    external: true 

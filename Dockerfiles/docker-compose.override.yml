@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  sqldata:
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "5433:1433"
+    networks:
+      - nuka-network
+
+networks:
+  nuka-network:
+    external: true

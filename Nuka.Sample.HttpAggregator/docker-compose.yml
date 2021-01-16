@@ -1,0 +1,8 @@
+﻿version: '3.4'
+
+services:
+  sample-aggr:
+    image: zhuxiang1212/nuka.sample.aggr
+    build:
+      context: .
+      dockerfile: ./Dockerfile

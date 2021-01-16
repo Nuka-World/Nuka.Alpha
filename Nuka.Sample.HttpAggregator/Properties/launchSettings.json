@@ -1,0 +1,16 @@
+﻿{
+  "profiles": {
+    "Nuka.Sample.HttpAggregator": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5101",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "URLS__SampleApiHealthCheckUrl": "http://localhost:5001/hc",
+        "URLS__IdentityApiUrl": "https://localhost:5000",
+        "URLS__SampleApiGrpcUrl": "http://localhost:9001"
+      }
+    }
+  }
+}

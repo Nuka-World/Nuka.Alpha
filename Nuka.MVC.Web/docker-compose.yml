@@ -1,0 +1,8 @@
+﻿version: '3.4'
+
+services:
+  mvc-web:
+    image: zhuxiang1212/nuka.mvc.web
+    build:
+      context: .
+      dockerfile: ./Dockerfile

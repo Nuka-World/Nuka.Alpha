@@ -1,0 +1,8 @@
+﻿version: '3.4'
+
+services:
+  webstatus:
+    image: zhuxiang1212/nuka.webstatus
+    build:
+      context: .
+      dockerfile: ./Dockerfile
