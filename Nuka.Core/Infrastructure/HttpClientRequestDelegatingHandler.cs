@@ -6,15 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nuka.Core.Models;
 
-namespace Nuka.MVC.Web.Infrastructure
+namespace Nuka.Core.Infrastructure
 {
     public class HttpClientRequestDelegatingHandler: DelegatingHandler
     {
-        private readonly HttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<HttpClientAuthorizationDelegatingHandler> _logger;
 
         public HttpClientRequestDelegatingHandler(
-            HttpContextAccessor httpContextAccessor, 
+            IHttpContextAccessor httpContextAccessor, 
             ILogger<HttpClientAuthorizationDelegatingHandler> logger)
         {
             _httpContextAccessor = httpContextAccessor;

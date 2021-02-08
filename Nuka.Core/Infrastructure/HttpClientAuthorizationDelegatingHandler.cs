@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Nuka.MVC.Web.Infrastructure
+namespace Nuka.Core.Infrastructure
 {
     public class HttpClientAuthorizationDelegatingHandler : DelegatingHandler
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger _logger;
+        private readonly ILogger<HttpClientAuthorizationDelegatingHandler> _logger;
 
         public HttpClientAuthorizationDelegatingHandler(
             IHttpContextAccessor httpContextAccessor,
