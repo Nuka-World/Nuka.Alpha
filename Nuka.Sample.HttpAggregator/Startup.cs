@@ -13,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Nuka.Core.Models;
+using Nuka.Core.Utils;
 using Nuka.Sample.HttpAggregator.Configurations;
 using Nuka.Sample.HttpAggregator.Extensions;
 
@@ -49,6 +51,9 @@ namespace Nuka.Sample.HttpAggregator
             // Add Controllers
             services.AddControllers();
 
+            // TODO: RequestContext
+            services.AddScoped<RequestContext>();
+
             // Add Authentication
             services.AddAuthentication(options =>
                 {
@@ -76,6 +81,8 @@ namespace Nuka.Sample.HttpAggregator
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseNukaWeb();
+            
             app.UseRouting();
 
             app.UseAuthentication();
