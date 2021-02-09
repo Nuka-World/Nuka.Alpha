@@ -2,9 +2,7 @@ using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Nuka.Core.Extensions;
+using Nuka.Core.Infrastructure;
 using Nuka.Core.Models;
 using Nuka.Core.Utils;
 using Nuka.Sample.HttpAggregator.Configurations;
@@ -49,11 +48,11 @@ namespace Nuka.Sample.HttpAggregator
                 .AddCustomMvc(_configuration)
                 .AddApplicationServices(_configuration);
 
+            // Add Web Components
+            services.AddNukaWeb();
+            
             // Add Controllers
             services.AddControllers();
-
-            // TODO: RequestContext
-            services.AddScoped<RequestContext>();
 
             // Add Authentication
             services.AddAuthentication(options =>
@@ -66,12 +65,12 @@ namespace Nuka.Sample.HttpAggregator
                     options.Audience = "sample.aggregator";
                     options.Authority = _configuration["URLS:IdentityApiUrl"];
                 });
-            
+
             // Add Grpc Clients
-            services.AddGrpcClient<SampleServer.SampleServerClient>(options =>
-            {
-                options.Address = new Uri(_configuration["URLS:SampleApiGrpcUrl"]);
-            });
+            services.AddGrpcClient<SampleServer.SampleServerClient>()
+                .ConfigureHttpClient(client => client.BaseAddress = new Uri(_configuration["URLS:SampleApiGrpcUrl"]))
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                .AddHttpMessageHandler<HttpClientRequestDelegatingHandler>();
 
             // Use Autofac container
             var containers = new ContainerBuilder();
@@ -89,7 +88,7 @@ namespace Nuka.Sample.HttpAggregator
             }
 
             app.UseNukaWeb();
-            
+
             app.UseRouting();
 
             app.UseAuthentication();

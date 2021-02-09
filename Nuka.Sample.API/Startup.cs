@@ -48,6 +48,8 @@ namespace Nuka.Sample.API
                 });
             });
 
+            // Add Web Components
+            services.AddNukaWeb();
             // Add Health Check
             services.AddCustomHealthCheck(_configuration);
             // Add Controllers
@@ -58,8 +60,6 @@ namespace Nuka.Sample.API
             services.AddAutoMapper();
             // Add HttpContext
             services.AddHttpContextAccessor();
-            // TODO: Add RequestContext
-            services.AddScoped<RequestContext>();
 
             // Use Autofac container
             var containers = new ContainerBuilder();
