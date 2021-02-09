@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using Nuka.Core.Data.DBContext;
 using Nuka.Core.Data.Repositories;
 using Nuka.Core.Extensions;
+using Nuka.Core.Models;
+using Nuka.Core.Utils;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
 using Nuka.Sample.API.Grpc.Services;
@@ -54,6 +56,10 @@ namespace Nuka.Sample.API
             services.AddGrpc();
             // Add AutoMapper
             services.AddAutoMapper();
+            // Add HttpContext
+            services.AddHttpContextAccessor();
+            // TODO: Add RequestContext
+            services.AddScoped<RequestContext>();
 
             // Use Autofac container
             var containers = new ContainerBuilder();
@@ -78,6 +84,8 @@ namespace Nuka.Sample.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseNukaWeb();
+            
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

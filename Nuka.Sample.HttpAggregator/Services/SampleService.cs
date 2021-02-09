@@ -11,15 +11,15 @@ namespace Nuka.Sample.HttpAggregator.Services
 {
     public class SampleService
     {
-        private readonly UrlsConfig _urlConfig;
+        private readonly SampleServer.SampleServerClient _client;
         private readonly ILogger<SampleService> _logger;
 
         public SampleService(
-            ILogger<SampleService> logger,
-            IOptions<UrlsConfig> urlConfigOptions)
+            SampleServer.SampleServerClient client,
+            ILogger<SampleService> logger)
         {
+            _client = client;
             _logger = logger;
-            _urlConfig = urlConfigOptions.Value;
         }
 
         public async Task<SampleItemModel> GetItemById(int id)
@@ -27,12 +27,9 @@ namespace Nuka.Sample.HttpAggregator.Services
             // TODO: refactor gRPC client
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
-
-            using var channel = GrpcChannel.ForAddress(_urlConfig.SampleApiGrpcUrl);
-            var client = new SampleServer.SampleServerClient(channel);
-
+            
             _logger.LogDebug("grpc client created, request = {@id}", id);
-            var response = await client.GetItemByIdAsync(new SampleItemRequest {Id = id});
+            var response = await _client.GetItemByIdAsync(new SampleItemRequest {Id = id});
             _logger.LogDebug("grpc response {@response}", response);
 
             // TODO: gRPC response mapping

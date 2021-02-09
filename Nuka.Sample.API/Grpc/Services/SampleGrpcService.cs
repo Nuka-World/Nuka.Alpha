@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Grpc.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Nuka.Sample.API.Services;
 using Nuke.Sample.API.Grpc;
@@ -9,12 +10,15 @@ namespace Nuka.Sample.API.Grpc.Services
     public class SampleGrpcService : SampleServer.SampleServerBase
     {
         private readonly SampleService _service;
+        private readonly HttpContext _context;
         private readonly ILogger<SampleGrpcService> _logger;
 
         public SampleGrpcService(
             SampleService service,
+            IHttpContextAccessor httpContextAccessor,
             ILogger<SampleGrpcService> logger)
         {
+            _context = httpContextAccessor.HttpContext;
             _service = service;
             _logger = logger;
         }

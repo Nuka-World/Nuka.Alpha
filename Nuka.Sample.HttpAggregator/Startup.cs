@@ -17,6 +17,7 @@ using Nuka.Core.Models;
 using Nuka.Core.Utils;
 using Nuka.Sample.HttpAggregator.Configurations;
 using Nuka.Sample.HttpAggregator.Extensions;
+using Nuke.Sample.API.Grpc;
 
 namespace Nuka.Sample.HttpAggregator
 {
@@ -65,6 +66,12 @@ namespace Nuka.Sample.HttpAggregator
                     options.Audience = "sample.aggregator";
                     options.Authority = _configuration["URLS:IdentityApiUrl"];
                 });
+            
+            // Add Grpc Clients
+            services.AddGrpcClient<SampleServer.SampleServerClient>(options =>
+            {
+                options.Address = new Uri(_configuration["URLS:SampleApiGrpcUrl"]);
+            });
 
             // Use Autofac container
             var containers = new ContainerBuilder();
