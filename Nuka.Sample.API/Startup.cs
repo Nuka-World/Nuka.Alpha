@@ -3,6 +3,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -48,6 +49,18 @@ namespace Nuka.Sample.API
                 });
             });
 
+            // Add Authentication
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.Audience = "sample.api";
+                    options.Authority = _configuration["URLS:IdentityApiUrl"];
+                });
+
             // Add Web Components
             services.AddNukaWeb();
             // Add Health Check
@@ -85,8 +98,11 @@ namespace Nuka.Sample.API
             }
 
             app.UseNukaWeb();
-            
+
             app.UseRouting();
+            
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

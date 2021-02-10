@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Nuka.Sample.API.Services;
@@ -23,6 +24,7 @@ namespace Nuka.Sample.API.Grpc.Services
             _logger = logger;
         }
 
+        [Authorize]
         public override Task<SampleItemResponse> GetItemById(SampleItemRequest request, ServerCallContext context)
         {
             var item = _service.GetItemById(request.Id);

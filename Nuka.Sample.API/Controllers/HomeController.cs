@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nuka.Core.Mappers;
 using Nuka.Sample.API.Data.Entities;
@@ -19,7 +20,8 @@ namespace Nuka.Sample.API.Controllers
             _logger = logger;
             _service = service;
         }
-
+        
+        [Authorize]
         [HttpGet]
         public IActionResult Index()
         {
