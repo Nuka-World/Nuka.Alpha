@@ -11,9 +11,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Nuka.Core.Data.DBContext;
 using Nuka.Core.Data.Repositories;
 using Nuka.Core.Extensions;
+using Nuka.Core.Messaging;
+using Nuka.Core.Messaging.ServiceBus;
 using Nuka.Core.Models;
 using Nuka.Core.Utils;
 using Nuka.Sample.API.Data;
@@ -74,6 +77,16 @@ namespace Nuka.Sample.API
             // Add HttpContext
             services.AddHttpContextAccessor();
 
+            // Add Event Publisher;
+            services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<ServiceBusEventPublisher>>();
+                return new ServiceBusEventPublisher(
+                    _configuration["ServiceBusConfig:ConnectionString"],
+                    _configuration["ServiceBusConfig:TopicName"],
+                    logger);
+            });
+
             // Use Autofac container
             var containers = new ContainerBuilder();
             containers.Populate(services);
@@ -100,7 +113,7 @@ namespace Nuka.Sample.API
             app.UseNukaWeb();
 
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
 

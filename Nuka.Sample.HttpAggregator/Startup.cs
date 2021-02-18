@@ -12,7 +12,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Nuka.Core.Extensions;
 using Nuka.Core.Infrastructure;
-using Nuka.Core.Models;
 using Nuka.Core.Utils;
 using Nuka.Sample.HttpAggregator.Configurations;
 using Nuka.Sample.HttpAggregator.Extensions;
