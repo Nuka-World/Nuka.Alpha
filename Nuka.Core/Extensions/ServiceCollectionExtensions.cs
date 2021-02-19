@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel.Design;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
-using Nuka.Core.Infrastructure;
 using Nuka.Core.Mappers;
 using Nuka.Core.Models;
+using Nuka.Core.RequestHandlers;
 
 namespace Nuka.Core.Extensions
 {

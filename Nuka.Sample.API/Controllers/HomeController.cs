@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Nuka.Core.Mappers;
 using Nuka.Core.Messaging;
 using Nuka.Sample.API.Data.Entities;
-using Nuka.Sample.API.Messaging;
+using Nuka.Sample.API.Messaging.EventPublish;
 using Nuka.Sample.API.Models;
 using Nuka.Sample.API.Services;
 
@@ -27,7 +27,6 @@ namespace Nuka.Sample.API.Controllers
             _eventPublisher = eventPublisher;
         }
         
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
         {

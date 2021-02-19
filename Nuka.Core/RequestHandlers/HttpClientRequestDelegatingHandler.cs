@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nuka.Core.Models;
 
-namespace Nuka.Core.Infrastructure
+namespace Nuka.Core.RequestHandlers
 {
     public class HttpClientRequestDelegatingHandler: DelegatingHandler
     {

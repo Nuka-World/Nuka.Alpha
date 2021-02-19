@@ -33,7 +33,7 @@ namespace Nuka.Core.Messaging.ServiceBus
                 CorrelationId = integrationEvent.CorrelationId ?? string.Empty,
                 ApplicationProperties =
                 {
-                    {"event-type", eventType}
+                    ["event-type"] = eventType
                 }
             };
 

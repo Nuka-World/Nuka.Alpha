@@ -17,7 +17,7 @@ using Nuka.Core.Data.Repositories;
 using Nuka.Core.Extensions;
 using Nuka.Core.Messaging;
 using Nuka.Core.Messaging.ServiceBus;
-using Nuka.Core.Models;
+using Nuka.Core.TypeFinders;
 using Nuka.Core.Utils;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
@@ -77,15 +77,34 @@ namespace Nuka.Sample.API
             // Add HttpContext
             services.AddHttpContextAccessor();
 
+            // Add TypeFinder
+            services.AddSingleton<ITypeFinder, AppDomainTypeFinder>();
+
             // Add Event Publisher;
             services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>(sp =>
             {
+                var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
                 var logger = sp.GetRequiredService<ILogger<ServiceBusEventPublisher>>();
                 return new ServiceBusEventPublisher(
-                    _configuration["ServiceBusConfig:ConnectionString"],
-                    _configuration["ServiceBusConfig:TopicName"],
+                    serviceBusConfig["ConnectionString"],
+                    serviceBusConfig["TopicName"],
                     logger);
             });
+
+            // Add Event Handlers
+            services.AddHostedService<ServiceBusEventHandlerHostService>(sp =>
+            {
+                var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
+                var logger = sp.GetRequiredService<ILogger<ServiceBusEventHandlerHostService>>();
+                var typeFinder = sp.GetRequiredService<ITypeFinder>();
+                return new ServiceBusEventHandlerHostService(
+                    serviceBusConfig["ConnectionString"],
+                    serviceBusConfig["TopicName"],
+                    serviceBusConfig["SubscriptionName"],
+                    typeFinder,
+                    logger);
+            });
+
 
             // Use Autofac container
             var containers = new ContainerBuilder();
