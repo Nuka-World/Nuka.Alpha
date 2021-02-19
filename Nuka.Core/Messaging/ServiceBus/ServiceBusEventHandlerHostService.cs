@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.ServiceBus;
@@ -15,6 +17,8 @@ namespace Nuka.Core.Messaging.ServiceBus
         private readonly ILogger<ServiceBusEventHandlerHostService> _logger;
         private readonly ServiceBusProcessor _processor;
 
+        private Dictionary<Type, List<Type>> _eventHandlerTypesMap = new Dictionary<Type, List<Type>>();
+
         public ServiceBusEventHandlerHostService(
             string connectString,
             string topicName,
@@ -30,6 +34,21 @@ namespace Nuka.Core.Messaging.ServiceBus
         public override Task StartAsync(CancellationToken cancellationToken)
         {
             var eventHandlerTypes = _typeFinder.FindClassesOfType(typeof(IIntegrationEventHandler<>));
+
+            foreach (var eventHandlerType in eventHandlerTypes)
+            {
+                var eventType = eventHandlerType
+                    .FindInterfaces((type, criteria) => true, typeof(IIntegrationEventHandler<>))
+                    .First()
+                    .GetGenericArguments()
+                    .First();
+
+                if (_eventHandlerTypesMap.ContainsKey(eventType))
+                    _eventHandlerTypesMap[eventType].Add(eventHandlerType);
+                else
+                    _eventHandlerTypesMap[eventType] = new List<Type> {eventHandlerType};
+            }
+
             return base.StartAsync(cancellationToken);
         }
 
@@ -50,7 +69,6 @@ namespace Nuka.Core.Messaging.ServiceBus
                 };
 
             await _processor.StartProcessingAsync(stoppingToken);
-
             _logger.LogInformation("ServiceBus EventHandler Service Started.");
         }
 
