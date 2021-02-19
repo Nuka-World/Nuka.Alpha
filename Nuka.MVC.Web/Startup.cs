@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Nuka.Core.Extensions;
 using Nuka.Core.Infrastructure;
 using Nuka.Core.Models;
+using Nuka.Core.RequestHandlers;
 using Nuka.Core.Utils;
 using Nuka.MVC.Web.Configurations;
 using Nuka.MVC.Web.Refit;

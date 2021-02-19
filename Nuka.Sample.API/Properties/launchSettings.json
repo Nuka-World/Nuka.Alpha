@@ -9,7 +9,10 @@
         "HTTP_PORT": "5001",
         "GRPC_PORT": "9001",
         "URLS__IdentityApiUrl": "https://localhost:5000",
-        "ConnectionStrings__DefaultConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;database=Nuka.Sample.API;trusted_connection=yes;"
+        "ConnectionStrings__DefaultConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;database=Nuka.Sample.API;trusted_connection=yes;",
+        "ServiceBusConfig__ConnectionString": "Endpoint=sb://utwoo-servicebus-test.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=o0DhlXUeASbxIlihJh8aKA8pyKeP5GfYE85up+K7hUQ=",
+        "ServiceBusConfig__TopicName": "demotopic",
+        "ServiceBusConfig__SubscriptionName": "demosub"
       }
     }
   }
