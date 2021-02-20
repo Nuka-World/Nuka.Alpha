@@ -6,47 +6,21 @@ using System.Text.RegularExpressions;
 
 namespace Nuka.Core.TypeFinders
 {
-    /// <summary>
-    /// A class that finds types needed by looping assemblies in the 
-    /// currently executing AppDomain. Only assemblies whose names matches
-    /// certain patterns are investigated and an optional list of assemblies
-    /// referenced by AssemblyNames are always investigated.
-    /// </summary>
     public class AppDomainTypeFinder : ITypeFinder
     {
-        /// <summary>
-        /// Gets the pattern for assembly that need to be investigated.
-        /// </summary>
         private string AssemblyLoadingPattern { get; } = "^Nuka";
 
-        /// <summary>
-        /// Find classes of type
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes</param>
-        /// <returns>Result</returns>
         public IEnumerable<Type> FindClassesOfType<T>(bool onlyConcreteClasses = true)
         {
             return FindClassesOfType(typeof(T), onlyConcreteClasses);
         }
 
-        /// <summary>
-        /// Find classes of type
-        /// </summary>
-        /// <param name="assignTypeFrom">Assign type from</param>
-        /// <param name="onlyConcreteClasses">A value indicating whether to find only concrete classes</param>
-        /// <returns>Result</returns>
-        /// <returns></returns>
         public IEnumerable<Type> FindClassesOfType(Type assignTypeFrom, bool onlyConcreteClasses = true)
         {
             return FindClassesOfType(assignTypeFrom, GetAssemblies(), onlyConcreteClasses);
         }
 
-        /// <summary>
-        /// Gets the assemblies related to the current implementation.
-        /// </summary>
-        /// <returns>A list of assemblies</returns>
-        public IList<Assembly> GetAssemblies()
+        public IEnumerable<Assembly> GetAssemblies()
         {
             var addedAssemblyNames = new List<string>();
             var assemblies = new List<Assembly>();
@@ -56,7 +30,7 @@ namespace Nuka.Core.TypeFinders
             return assemblies;
         }
 
-        protected virtual IEnumerable<Type> FindClassesOfType(
+        private IEnumerable<Type> FindClassesOfType(
             Type assignTypeFrom, 
             IEnumerable<Assembly> assemblies,
             bool onlyConcreteClasses = true)
@@ -93,7 +67,7 @@ namespace Nuka.Core.TypeFinders
             return result;
         }
 
-        protected virtual bool IsTypeImplementOpenGeneric(Type type, Type openGeneric)
+        private bool IsTypeImplementOpenGeneric(Type type, Type openGeneric)
         {
             try
             {
@@ -109,33 +83,12 @@ namespace Nuka.Core.TypeFinders
             }
         }
 
-        /// <summary>
-        /// Check if an assembly is one of the shipped assemblies that need to be investigated.
-        /// </summary>
-        /// <param name="assemblyFullName">
-        /// The name of the assembly to check.
-        /// </param>
-        /// <returns>
-        /// True if the assembly should be loaded into system.
-        /// </returns>
-        protected virtual bool Matches(string assemblyFullName)
+        private bool Matches(string assemblyFullName)
         {
             return Matches(assemblyFullName, AssemblyLoadingPattern);
         }
 
-        /// <summary>
-        /// Check if an assembly is one of the shipped assemblies that need to be investigated.
-        /// </summary>
-        /// <param name="assemblyFullName">
-        /// The assembly name to match.
-        /// </param>
-        /// <param name="pattern">
-        /// The regular expression pattern to match against the assembly name.
-        /// </param>
-        /// <returns>
-        /// True if the pattern matches the assembly name.
-        /// </returns>
-        protected virtual bool Matches(string assemblyFullName, string pattern)
+        private bool Matches(string assemblyFullName, string pattern)
         {
             return Regex.IsMatch(assemblyFullName, pattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
         }
