@@ -22,6 +22,7 @@ using Nuka.Core.Utils;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
 using Nuka.Sample.API.Grpc.Services;
+using Nuka.Sample.API.Messaging.EventHandler;
 using Nuka.Sample.API.Services;
 
 namespace Nuka.Sample.API
@@ -92,9 +93,13 @@ namespace Nuka.Sample.API
             });
 
             // Add Event Handlers
+            services.AddSingleton<SampleEventHandler>();
+            
+            // Add Event Handler Service
             services.AddHostedService<ServiceBusEventHandlerHostService>(sp =>
             {
                 var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
+                var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                 var logger = sp.GetRequiredService<ILogger<ServiceBusEventHandlerHostService>>();
                 var typeFinder = sp.GetRequiredService<ITypeFinder>();
                 return new ServiceBusEventHandlerHostService(
@@ -102,9 +107,9 @@ namespace Nuka.Sample.API
                     serviceBusConfig["TopicName"],
                     serviceBusConfig["SubscriptionName"],
                     typeFinder,
+                    iLifetimeScope,
                     logger);
             });
-
 
             // Use Autofac container
             var containers = new ContainerBuilder();

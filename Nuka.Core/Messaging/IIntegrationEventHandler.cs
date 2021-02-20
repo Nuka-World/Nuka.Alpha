@@ -4,6 +4,6 @@ namespace Nuka.Core.Messaging
 {
     public interface IIntegrationEventHandler<in T> where T : IntegrationEvent
     {
-        Task Handle(T integrationEvent);
+        Task HandleAsync(T integrationEvent);
     }
 }

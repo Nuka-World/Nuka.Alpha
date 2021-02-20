@@ -14,7 +14,7 @@ namespace Nuka.Sample.API.Messaging.EventHandler
             _logger = logger;
         }
 
-        public Task Handle(SampleEvent integrationEvent)
+        public Task HandleAsync(SampleEvent integrationEvent)
         {
             _logger.LogInformation($"Event Handler Successfully. Item ID:{integrationEvent.ItemId}");
             return Task.CompletedTask;
