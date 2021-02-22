@@ -81,36 +81,40 @@ namespace Nuka.Sample.API
             // Add TypeFinder
             services.AddSingleton<ITypeFinder, AppDomainTypeFinder>();
 
-            // Add Event Publisher;
-            services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>(sp =>
+            // Check ServiceBus Enabled
+            if (Convert.ToBoolean(_configuration["ServiceBusEnabled"]))
             {
-                var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
-                var logger = sp.GetRequiredService<ILogger<ServiceBusEventPublisher>>();
-                return new ServiceBusEventPublisher(
-                    serviceBusConfig["ConnectionString"],
-                    serviceBusConfig["TopicName"],
-                    logger);
-            });
+                // Add Event Publisher;
+                services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>(sp =>
+                {
+                    var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
+                    var logger = sp.GetRequiredService<ILogger<ServiceBusEventPublisher>>();
+                    return new ServiceBusEventPublisher(
+                        serviceBusConfig["ConnectionString"],
+                        serviceBusConfig["TopicName"],
+                        logger);
+                });
 
-            // Add Event Handlers
-            services.AddSingleton<SampleEventHandler>();
-            services.AddSingleton<SampleEventHandler2>();
-            
-            // Add Event Handler Service
-            services.AddHostedService<ServiceBusEventHandlerHostService>(sp =>
-            {
-                var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
-                var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
-                var logger = sp.GetRequiredService<ILogger<ServiceBusEventHandlerHostService>>();
-                var typeFinder = sp.GetRequiredService<ITypeFinder>();
-                return new ServiceBusEventHandlerHostService(
-                    serviceBusConfig["ConnectionString"],
-                    serviceBusConfig["TopicName"],
-                    serviceBusConfig["SubscriptionName"],
-                    typeFinder,
-                    iLifetimeScope,
-                    logger);
-            });
+                // Add Event Handlers
+                services.AddSingleton<SampleEventHandler>();
+                services.AddSingleton<SampleEventHandler2>();
+
+                // Add Event Handler Service
+                services.AddHostedService<ServiceBusEventHandlerHostService>(sp =>
+                {
+                    var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
+                    var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+                    var logger = sp.GetRequiredService<ILogger<ServiceBusEventHandlerHostService>>();
+                    var typeFinder = sp.GetRequiredService<ITypeFinder>();
+                    return new ServiceBusEventHandlerHostService(
+                        serviceBusConfig["ConnectionString"],
+                        serviceBusConfig["TopicName"],
+                        serviceBusConfig["SubscriptionName"],
+                        typeFinder,
+                        iLifetimeScope,
+                        logger);
+                });
+            }
 
             // Use Autofac container
             var containers = new ContainerBuilder();

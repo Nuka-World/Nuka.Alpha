@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nuka.Core.Mappers;
@@ -16,17 +15,17 @@ namespace Nuka.Sample.API.Controllers
         private readonly SampleService _service;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILogger<HomeController> _logger;
-
+        
         public HomeController(
             SampleService service,
-            IEventPublisher eventPublisher,
-            ILogger<HomeController> logger)
+            ILogger<HomeController> logger,
+            IEventPublisher eventPublisher = null)
         {
             _logger = logger;
             _service = service;
             _eventPublisher = eventPublisher;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -46,7 +45,8 @@ namespace Nuka.Sample.API.Controllers
             }
 
             // Publish Event
-            await _eventPublisher.PublishAsync(new SampleEvent {ItemId = "00001"});
+            if (_eventPublisher != null)
+                await _eventPublisher.PublishAsync(new SampleEvent {ItemId = "00001"});
 
             return Json(item.ToModel<SampleItemModel>());
         }
