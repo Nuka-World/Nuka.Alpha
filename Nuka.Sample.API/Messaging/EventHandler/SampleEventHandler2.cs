@@ -7,11 +7,11 @@ using Nuka.Sample.API.Messaging.EventPublish;
 
 namespace Nuka.Sample.API.Messaging.EventHandler
 {
-    public class SampleEventHandler : IIntegrationEventHandler<SampleEvent>
+    public class SampleEventHandler2 : IIntegrationEventHandler<SampleEvent>
     {
         private readonly ILogger<SampleEventHandler> _logger;
 
-        public SampleEventHandler(ILogger<SampleEventHandler> logger)
+        public SampleEventHandler2(ILogger<SampleEventHandler> logger)
         {
             _logger = logger;
         }
@@ -23,7 +23,7 @@ namespace Nuka.Sample.API.Messaging.EventHandler
                 var timer = new Random().Next(15);
                 Thread.Sleep(timer * 1000);
                 _logger.LogInformation(
-                    $"Event Handler #1 Successfully. Item ID:{integrationEvent.ItemId}. Timer: {timer}");
+                    $"Event Handler #2 Successfully. Item ID:{integrationEvent.ItemId}. Timer: {timer}");
             });
         }
     }

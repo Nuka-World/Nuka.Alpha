@@ -94,6 +94,7 @@ namespace Nuka.Sample.API
 
             // Add Event Handlers
             services.AddSingleton<SampleEventHandler>();
+            services.AddSingleton<SampleEventHandler2>();
             
             // Add Event Handler Service
             services.AddHostedService<ServiceBusEventHandlerHostService>(sp =>

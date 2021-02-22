@@ -84,19 +84,21 @@ namespace Nuka.Core.Messaging.ServiceBus
 
             if (eventHandlerTypes != null && eventHandlerTypes.Count > 0)
             {
-                await using var scope = _autofac.BeginLifetimeScope(AUTOFAC_SCOPE_NAME);
-
-                foreach (var eventHandlerType in eventHandlerTypes)
+                var taskSelect = eventHandlerTypes.Select(eventHandlerType =>
                 {
+                    using var scope = _autofac.BeginLifetimeScope(AUTOFAC_SCOPE_NAME);
+                    
                     var eventHandler = scope.ResolveOptional(eventHandlerType);
-                    if (eventHandler == null) continue;
+                    if (eventHandler == null) return Task.CompletedTask;
 
                     var integrationEvent = JsonConvert.DeserializeObject(args.Message.Body.ToString(), eventType);
                     var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
 
-                    ((Task) concreteType.GetMethod("HandleAsync")
-                        ?.Invoke(eventHandler, new object[] {integrationEvent}))?.GetAwaiter().GetResult();
-                }
+                    return (Task) concreteType.GetMethod("HandleAsync")
+                        ?.Invoke(eventHandler, new object[] {integrationEvent});
+                });
+
+                await Task.WhenAll(taskSelect);
             }
 
             await args.CompleteMessageAsync(args.Message);
