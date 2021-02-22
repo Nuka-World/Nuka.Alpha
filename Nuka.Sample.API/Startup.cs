@@ -3,6 +3,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -10,12 +11,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Nuka.Core.Data.DBContext;
 using Nuka.Core.Data.Repositories;
 using Nuka.Core.Extensions;
+using Nuka.Core.Messaging;
+using Nuka.Core.Messaging.ServiceBus;
+using Nuka.Core.TypeFinders;
+using Nuka.Core.Utils;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
 using Nuka.Sample.API.Grpc.Services;
+using Nuka.Sample.API.Messaging.EventHandler;
 using Nuka.Sample.API.Services;
 
 namespace Nuka.Sample.API
@@ -46,6 +53,20 @@ namespace Nuka.Sample.API
                 });
             });
 
+            // Add Authentication
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.Audience = "sample.api";
+                    options.Authority = _configuration["URLS:IdentityApiUrl"];
+                });
+
+            // Add Web Components
+            services.AddNukaWeb();
             // Add Health Check
             services.AddCustomHealthCheck(_configuration);
             // Add Controllers
@@ -54,6 +75,46 @@ namespace Nuka.Sample.API
             services.AddGrpc();
             // Add AutoMapper
             services.AddAutoMapper();
+            // Add HttpContext
+            services.AddHttpContextAccessor();
+
+            // Add TypeFinder
+            services.AddSingleton<ITypeFinder, AppDomainTypeFinder>();
+
+            // Check ServiceBus Enabled
+            if (Convert.ToBoolean(_configuration["ServiceBusEnabled"]))
+            {
+                // Add Event Publisher;
+                services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>(sp =>
+                {
+                    var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
+                    var logger = sp.GetRequiredService<ILogger<ServiceBusEventPublisher>>();
+                    return new ServiceBusEventPublisher(
+                        serviceBusConfig["ConnectionString"],
+                        serviceBusConfig["TopicName"],
+                        logger);
+                });
+
+                // Add Event Handlers
+                services.AddSingleton<SampleEventHandler>();
+                services.AddSingleton<SampleEventHandler2>();
+
+                // Add Event Handler Service
+                services.AddHostedService<ServiceBusEventHandlerHostService>(sp =>
+                {
+                    var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
+                    var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+                    var logger = sp.GetRequiredService<ILogger<ServiceBusEventHandlerHostService>>();
+                    var typeFinder = sp.GetRequiredService<ITypeFinder>();
+                    return new ServiceBusEventHandlerHostService(
+                        serviceBusConfig["ConnectionString"],
+                        serviceBusConfig["TopicName"],
+                        serviceBusConfig["SubscriptionName"],
+                        typeFinder,
+                        iLifetimeScope,
+                        logger);
+                });
+            }
 
             // Use Autofac container
             var containers = new ContainerBuilder();
@@ -78,7 +139,12 @@ namespace Nuka.Sample.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseNukaWeb();
+
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

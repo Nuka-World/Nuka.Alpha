@@ -1,6 +1,10 @@
 ﻿using System.Threading.Tasks;
 using Grpc.Core;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Nuka.Core.Messaging;
+using Nuka.Sample.API.Messaging.EventPublish;
 using Nuka.Sample.API.Services;
 using Nuke.Sample.API.Grpc;
 
@@ -9,16 +13,23 @@ namespace Nuka.Sample.API.Grpc.Services
     public class SampleGrpcService : SampleServer.SampleServerBase
     {
         private readonly SampleService _service;
+        private readonly IEventPublisher _eventPublisher;
+        private readonly HttpContext _context;
         private readonly ILogger<SampleGrpcService> _logger;
 
         public SampleGrpcService(
             SampleService service,
+            IEventPublisher eventPublisher,
+            IHttpContextAccessor httpContextAccessor,
             ILogger<SampleGrpcService> logger)
         {
+            _context = httpContextAccessor.HttpContext;
             _service = service;
+            _eventPublisher = eventPublisher;
             _logger = logger;
         }
 
+        [Authorize]
         public override Task<SampleItemResponse> GetItemById(SampleItemRequest request, ServerCallContext context)
         {
             var item = _service.GetItemById(request.Id);
@@ -42,6 +53,9 @@ namespace Nuka.Sample.API.Grpc.Services
                     Type = item.SampleType.Type
                 }
             };
+
+            // Publish Event
+            _eventPublisher.PublishAsync(new SampleEvent {ItemId = request.Id.ToString()});
 
             return Task.FromResult(sampleItemResponse);
         }

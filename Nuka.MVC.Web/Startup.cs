@@ -12,8 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Nuka.Core.Extensions;
+using Nuka.Core.RequestHandlers;
+using Nuka.Core.Utils;
 using Nuka.MVC.Web.Configurations;
-using Nuka.MVC.Web.Infrastructure;
 using Nuka.MVC.Web.Refit;
 using Nuka.MVC.Web.Services;
 using Refit;
@@ -50,6 +52,9 @@ namespace Nuka.MVC.Web
             services.AddMvc()
                 .AddNewtonsoftJson();
 
+            // Add Web Components
+            services.AddNukaWeb();
+            
             // Add Services
             services.AddSingleton<SampleService>();
 
@@ -78,12 +83,11 @@ namespace Nuka.MVC.Web
 
             // Add HttpContext
             services.AddHttpContextAccessor();
-            // Add Delegating Handler
-            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
             // Add Refits
             services.AddRefitClient<ISampleApi>()
                 .ConfigureHttpClient(client => { client.BaseAddress = new Uri(_configuration["URLS:SampleApiUrl"]); })
-                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                .AddHttpMessageHandler<HttpClientRequestDelegatingHandler>();
 
             var containers = new ContainerBuilder();
             containers.Populate(services);
@@ -98,6 +102,8 @@ namespace Nuka.MVC.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseNukaWeb();
 
             app.UseRouting();
 

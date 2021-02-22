@@ -16,7 +16,7 @@ namespace Nuka.Identity.API.Configurations
                 new IdentityResources.Profile()
             };
         }
-        
+
         public static IEnumerable<ApiResource> GetApiResources()
         {
             return new ApiResource[]
@@ -73,6 +73,28 @@ namespace Nuka.Identity.API.Configurations
                     AlwaysIncludeUserClaimsInIdToken = true,
                     AccessTokenLifetime = 60 * 60 * 2, // 2 hours
                     IdentityTokenLifetime = 60 * 60 * 2 // 2 hours
+                },
+                // Test Client
+                new Client()
+                {
+                    ClientId = "test_client",
+                    ClientName = "Test Client",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = {new Secret("test_secret".Sha256())},
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.OfflineAccess,
+                        "sample.aggregator.access",
+                        "sample.api.access",
+                    },
+                    AllowAccessTokensViaBrowser = true,
+                    AllowOfflineAccess = true,
+                    RequirePkce = false,
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    AccessTokenLifetime = 60 * 60 * 24, // 1 day
+                    IdentityTokenLifetime = 60 * 60 * 24 // 1 day
                 }
             };
         }

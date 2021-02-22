@@ -1,20 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
-namespace Nuka.MVC.Web.Infrastructure
+namespace Nuka.Core.RequestHandlers
 {
     public class HttpClientAuthorizationDelegatingHandler : DelegatingHandler
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<HttpClientAuthorizationDelegatingHandler> _logger;
 
-        public HttpClientAuthorizationDelegatingHandler(IHttpContextAccessor httpContextAccessor)
+        public HttpClientAuthorizationDelegatingHandler(
+            IHttpContextAccessor httpContextAccessor,
+            ILogger<HttpClientAuthorizationDelegatingHandler> logger)
         {
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(
@@ -40,7 +46,7 @@ namespace Nuka.MVC.Web.Infrastructure
 
         async Task<string> GetToken()
         {
-            return await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            return await (_httpContextAccessor.HttpContext ?? throw new InvalidOperationException()).GetTokenAsync("access_token");
         }
-    }
+    }   
 }

@@ -4,11 +4,22 @@ using System.Reflection;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Nuka.Core.Mappers;
+using Nuka.Core.Models;
+using Nuka.Core.RequestHandlers;
 
 namespace Nuka.Core.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static void AddNukaWeb(this IServiceCollection services)
+        {
+            // Register RequestContext
+            services.AddScoped<RequestContext>();
+            // Add Delegating Handler
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+            services.AddTransient<HttpClientRequestDelegatingHandler>();
+        }
+        
         public static void AddAutoMapper(this IServiceCollection services)
         {
             // Find mapper configurations provided by other assemblies
