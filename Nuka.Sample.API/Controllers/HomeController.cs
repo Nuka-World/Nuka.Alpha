@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nuka.Core.Mappers;
@@ -26,6 +27,7 @@ namespace Nuka.Sample.API.Controllers
             _eventPublisher = eventPublisher;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
