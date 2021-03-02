@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,16 +30,16 @@ namespace Nuka.Sample.API
 {
     public class Startup
     {
-        protected readonly IConfiguration Configuration;
+        private readonly IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-        
+
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            var connectionString = _configuration.GetConnectionString("DefaultConnection");
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             // Add IdentityData and persistent 
@@ -60,13 +61,13 @@ namespace Nuka.Sample.API
                 .AddJwtBearer(options =>
                 {
                     options.Audience = "sample.api";
-                    options.Authority = Configuration["URLS:IdentityApiUrl"];
+                    options.Authority = _configuration["URLS:IdentityApiUrl"];
                 });
 
             // Add Web Components
             services.AddNukaWeb();
             // Add Health Check
-            services.AddCustomHealthCheck(Configuration);
+            services.AddCustomHealthCheck(_configuration);
             // Add Controllers
             services.AddControllers();
             // Add Grpc Components
@@ -80,12 +81,12 @@ namespace Nuka.Sample.API
             services.AddSingleton<ITypeFinder, AppDomainTypeFinder>();
 
             // Check ServiceBus Enabled
-            if (Convert.ToBoolean(Configuration["ServiceBusEnabled"]))
+            if (Convert.ToBoolean(_configuration["ServiceBusEnabled"]))
             {
                 // Add Event Publisher;
                 services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>(sp =>
                 {
-                    var serviceBusConfig = Configuration.GetSection("ServiceBusConfig");
+                    var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
                     var logger = sp.GetRequiredService<ILogger<ServiceBusEventPublisher>>();
                     return new ServiceBusEventPublisher(
                         serviceBusConfig["ConnectionString"],
@@ -96,11 +97,11 @@ namespace Nuka.Sample.API
                 // Add Event Handlers
                 services.AddSingleton<SampleEventHandler>();
                 services.AddSingleton<SampleEventHandler2>();
-                
+
                 // Add Event Handler Service
-                services.AddHostedService<ServiceBusEventHandlerHostService>(sp =>
+                services.AddHostedService(sp =>
                 {
-                    var serviceBusConfig = Configuration.GetSection("ServiceBusConfig");
+                    var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
                     var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                     var logger = sp.GetRequiredService<ILogger<ServiceBusEventHandlerHostService>>();
                     var typeFinder = sp.GetRequiredService<ITypeFinder>();
@@ -113,6 +114,10 @@ namespace Nuka.Sample.API
                         logger);
                 });
             }
+
+            // If NoAuth in setting then not check all security-specific metadata.
+            services.Configure<RouteOptions>(options =>
+                options.SuppressCheckForUnhandledSecurityMetadata = Convert.ToBoolean(_configuration["NoAuth"]));
 
             // Use Autofac container
             var containers = new ContainerBuilder();
@@ -145,8 +150,12 @@ namespace Nuka.Sample.API
 
             app.UseRouting();
 
-            // Configure Authentication and Authorization
-            ConfigureAuth(app);
+            // If NoAuth in setting then need not any authenticate and authority.
+            if (!Convert.ToBoolean(_configuration["NoAuth"]))
+            {
+                app.UseAuthentication();
+                app.UseAuthorization();
+            }
 
             app.UseEndpoints(endpoints =>
             {
@@ -164,12 +173,6 @@ namespace Nuka.Sample.API
                     Predicate = r => r.Name.Contains("self")
                 });
             });
-        }
-        
-        protected virtual void ConfigureAuth(IApplicationBuilder app)
-        {
-            app.UseAuthentication();
-            app.UseAuthorization();
         }
     }
 }
