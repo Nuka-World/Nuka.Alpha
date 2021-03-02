@@ -29,18 +29,16 @@ namespace Nuka.Sample.API
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration;
+        protected readonly IConfiguration Configuration;
 
         public Startup(IConfiguration configuration)
         {
-            _configuration = configuration;
+            Configuration = configuration;
         }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        
+        public virtual IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             // Add IdentityData and persistent 
@@ -62,13 +60,13 @@ namespace Nuka.Sample.API
                 .AddJwtBearer(options =>
                 {
                     options.Audience = "sample.api";
-                    options.Authority = _configuration["URLS:IdentityApiUrl"];
+                    options.Authority = Configuration["URLS:IdentityApiUrl"];
                 });
 
             // Add Web Components
             services.AddNukaWeb();
             // Add Health Check
-            services.AddCustomHealthCheck(_configuration);
+            services.AddCustomHealthCheck(Configuration);
             // Add Controllers
             services.AddControllers();
             // Add Grpc Components
@@ -82,12 +80,12 @@ namespace Nuka.Sample.API
             services.AddSingleton<ITypeFinder, AppDomainTypeFinder>();
 
             // Check ServiceBus Enabled
-            if (Convert.ToBoolean(_configuration["ServiceBusEnabled"]))
+            if (Convert.ToBoolean(Configuration["ServiceBusEnabled"]))
             {
                 // Add Event Publisher;
                 services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>(sp =>
                 {
-                    var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
+                    var serviceBusConfig = Configuration.GetSection("ServiceBusConfig");
                     var logger = sp.GetRequiredService<ILogger<ServiceBusEventPublisher>>();
                     return new ServiceBusEventPublisher(
                         serviceBusConfig["ConnectionString"],
@@ -98,11 +96,11 @@ namespace Nuka.Sample.API
                 // Add Event Handlers
                 services.AddSingleton<SampleEventHandler>();
                 services.AddSingleton<SampleEventHandler2>();
-
+                
                 // Add Event Handler Service
                 services.AddHostedService<ServiceBusEventHandlerHostService>(sp =>
                 {
-                    var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
+                    var serviceBusConfig = Configuration.GetSection("ServiceBusConfig");
                     var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                     var logger = sp.GetRequiredService<ILogger<ServiceBusEventHandlerHostService>>();
                     var typeFinder = sp.GetRequiredService<ITypeFinder>();
@@ -122,11 +120,15 @@ namespace Nuka.Sample.API
 
             // Register DbContext
             containers.Register(context => new SampleDbContext(context.Resolve<DbContextOptions<SampleDbContext>>()))
-                .As<IDbContext>().InstancePerLifetimeScope();
+                .As<IDbContext>()
+                .InstancePerLifetimeScope();
             // Register Repositories
-            containers.RegisterGeneric(typeof(CommonRepository<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            containers.RegisterGeneric(typeof(CommonRepository<>))
+                .As(typeof(IRepository<>))
+                .InstancePerLifetimeScope();
             // Register Services
-            containers.RegisterType<SampleService>().SingleInstance();
+            containers.RegisterType<SampleService>()
+                .SingleInstance();
 
             return new AutofacServiceProvider(containers.Build());
         }
@@ -143,8 +145,8 @@ namespace Nuka.Sample.API
 
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            // Configure Authentication and Authorization
+            ConfigureAuth(app);
 
             app.UseEndpoints(endpoints =>
             {
@@ -162,6 +164,12 @@ namespace Nuka.Sample.API
                     Predicate = r => r.Name.Contains("self")
                 });
             });
+        }
+        
+        protected virtual void ConfigureAuth(IApplicationBuilder app)
+        {
+            app.UseAuthentication();
+            app.UseAuthorization();
         }
     }
 }

@@ -33,6 +33,10 @@ ProjectSection(SolutionItems) = preProject
 	Dockerfiles\docker-compose.yml = Dockerfiles\docker-compose.yml
 EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Sample.API.Unit.Tests", "Nuka.Sample.API.Unit.Tests\Nuka.Sample.API.Unit.Tests.csproj", "{E7B0499A-2394-4628-A792-238B59CA2645}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuka.Sample.API.Functional.Tests", "Nuka.Sample.API.Functional.Tests\Nuka.Sample.API.Functional.Tests.csproj", "{74146224-3781-4CD3-8AB5-BD8FC1DA6846}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{8288F9A4-98FC-4CA9-A246-95EE70646662}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8288F9A4-98FC-4CA9-A246-95EE70646662}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8288F9A4-98FC-4CA9-A246-95EE70646662}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7B0499A-2394-4628-A792-238B59CA2645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7B0499A-2394-4628-A792-238B59CA2645}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7B0499A-2394-4628-A792-238B59CA2645}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7B0499A-2394-4628-A792-238B59CA2645}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74146224-3781-4CD3-8AB5-BD8FC1DA6846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74146224-3781-4CD3-8AB5-BD8FC1DA6846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74146224-3781-4CD3-8AB5-BD8FC1DA6846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74146224-3781-4CD3-8AB5-BD8FC1DA6846}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E391D385-FC95-4B62-9810-ADB8AB3DB8E2} = {4EF09C42-0314-4825-A34C-3EBA2C6743D3}
