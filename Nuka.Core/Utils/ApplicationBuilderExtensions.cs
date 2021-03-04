@@ -10,7 +10,8 @@ namespace Nuka.Core.Utils
         public static IApplicationBuilder UseNukaWeb(this IApplicationBuilder applicationBuilder)
         {
             return applicationBuilder
-                .UseMiddleware<RequestContextBuilderMiddleware>();
+                .UseMiddleware<RequestContextBuilderMiddleware>()
+                .UseMiddleware<RequestLoggingMiddleware>();
         }
     }
 }

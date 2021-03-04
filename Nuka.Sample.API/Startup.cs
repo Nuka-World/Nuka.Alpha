@@ -81,12 +81,12 @@ namespace Nuka.Sample.API
             services.AddSingleton<ITypeFinder, AppDomainTypeFinder>();
 
             // Check ServiceBus Enabled
-            if (Convert.ToBoolean(_configuration["ServiceBusEnabled"]))
+            if (Convert.ToBoolean(_configuration["AzureServiceBusEnabled"]))
             {
                 // Add Event Publisher;
                 services.AddSingleton<IEventPublisher, ServiceBusEventPublisher>(sp =>
                 {
-                    var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
+                    var serviceBusConfig = _configuration.GetSection("AzureServiceBus");
                     var logger = sp.GetRequiredService<ILogger<ServiceBusEventPublisher>>();
                     return new ServiceBusEventPublisher(
                         serviceBusConfig["ConnectionString"],
@@ -101,7 +101,7 @@ namespace Nuka.Sample.API
                 // Add Event Handler Service
                 services.AddHostedService(sp =>
                 {
-                    var serviceBusConfig = _configuration.GetSection("ServiceBusConfig");
+                    var serviceBusConfig = _configuration.GetSection("AzureServiceBus");
                     var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                     var logger = sp.GetRequiredService<ILogger<ServiceBusEventHandlerHostService>>();
                     var typeFinder = sp.GetRequiredService<ITypeFinder>();

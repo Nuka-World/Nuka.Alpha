@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
 using Serilog;
+using Serilog.Formatting.Json;
+using Serilog.Sinks.Http.BatchFormatters;
 
 namespace Nuka.Sample.API
 {
@@ -20,13 +22,13 @@ namespace Nuka.Sample.API
             var configuration = GetConfiguration();
             Log.Logger = CreateSerilogLogger(configuration);
 
-            Log.Information("Configuring web host ({ApplicationContext})...", AppName);
+            Log.Information("Configuring web host ({@ApplicationContext})...", AppName);
             var host = CreateHostBuilder(configuration, args).Build();
 
-            Log.Information("Applying web host ({ApplicationContext})...", AppName);
+            Log.Information("Applying web host ({@ApplicationContext})...", AppName);
             host.MigrateDbContext<SampleDbContext>();
 
-            Log.Information("Starting web host ({ApplicationContext})...", AppName);
+            Log.Information("Starting web host ({@ApplicationContext})...", AppName);
             host.Run();
 
             return 0;
@@ -55,6 +57,9 @@ namespace Nuka.Sample.API
                 .Enrich.WithProperty("ApplicationContext", AppName)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
+                .WriteTo.Http(
+                    requestUri: configuration["URLS:LogstashUrl"],
+                    batchFormatter: new ArrayBatchFormatter())
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
         }
