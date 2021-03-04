@@ -30,6 +30,7 @@ namespace Nuka.Core.Middlewares
         public async Task Invoke(HttpContext httpContext, RequestContext requestContext)
         {
             var request = httpContext.Request;
+            var requestPath = httpContext.Request.Path.ToString();
 
             var logContextProperties = new Dictionary<string, string>
             {
@@ -38,11 +39,7 @@ namespace Nuka.Core.Middlewares
             };
 
             if (requestContext.TryGetValue(StandardHeaders.CorrelationId, out var correlationId))
-            {
                 logContextProperties[StandardLogProperties.CorrelationId] = correlationId;
-            }
-
-            var requestPath = httpContext.Request.Path.ToString();
 
             var start = Stopwatch.GetTimestamp();
             var propertyEnrichers = logContextProperties
