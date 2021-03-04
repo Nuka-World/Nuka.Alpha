@@ -10,7 +10,7 @@
         "HTTP_PORT": "5001",
         "GRPC_PORT": "9001",
         "URLS__IdentityApiUrl": "https://localhost:5000",
-        "URLS__LogstashUrl": "http://192.168.20.151:9880/Nuka",
+        "URLS__LogstashUrl": "http://192.168.20.151:9880/nuka/sample",
         "ConnectionStrings__DefaultConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;database=Nuka.Sample.API;trusted_connection=yes;",
         "AzureServiceBusEnabled": "false",
         "AzureServiceBus__ConnectionString": "Endpoint=sb://utwoo-servicebus-test.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=y7jreHYEO6EpxJ+P873ZD5K/WXxaWli3cKc0rYiMmrw=",
