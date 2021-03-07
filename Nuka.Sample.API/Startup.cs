@@ -42,7 +42,7 @@ namespace Nuka.Sample.API
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
-            // Add IdentityData and persistent 
+            // Add DbContext
             services.AddDbContext<SampleDbContext>(builder =>
             {
                 builder.UseSqlServer(connectionString, optionsBuilder =>
@@ -66,14 +66,14 @@ namespace Nuka.Sample.API
 
             // Add Web Components
             services.AddNukaWeb();
+            // Add AutoMapper
+            services.AddAutoMapper();
             // Add Health Check
             services.AddCustomHealthCheck(_configuration);
             // Add Controllers
             services.AddControllers();
             // Add Grpc Components
             services.AddGrpc();
-            // Add AutoMapper
-            services.AddAutoMapper();
             // Add HttpContext
             services.AddHttpContextAccessor();
 
@@ -97,7 +97,6 @@ namespace Nuka.Sample.API
                 // Add Event Handlers
                 services.AddSingleton<SampleEventHandler>();
                 services.AddSingleton<SampleEventHandler2>();
-
                 // Add Event Handler Service
                 services.AddHostedService(sp =>
                 {
@@ -124,7 +123,7 @@ namespace Nuka.Sample.API
             containers.Populate(services);
 
             // Register DbContext
-            containers.Register(context => new SampleDbContext(context.Resolve<DbContextOptions<SampleDbContext>>()))
+            containers.RegisterType<SampleDbContext>()
                 .As<IDbContext>()
                 .InstancePerLifetimeScope();
             // Register Repositories
