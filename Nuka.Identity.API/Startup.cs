@@ -2,20 +2,16 @@ using System;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Nuka.Core.Routes;
 using Nuka.Identity.API.Certificates;
 using Nuka.Identity.API.Configurations;
-using Nuka.Identity.API.Data;
 
 namespace Nuka.Identity.API
 {
@@ -126,15 +122,7 @@ namespace Nuka.Identity.API
                 endpoints =>
                 {
                     endpoints.MapDefaultControllerRoute();
-                    endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
-                    {
-                        Predicate = _ => true,
-                        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                    });
-                    endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
-                    {
-                        Predicate = r => r.Name.Contains("self")
-                    });
+                    endpoints.MapHealthCheckRoutes();
                 });
         }
     }

@@ -2,10 +2,8 @@ using System;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -18,8 +16,8 @@ using Nuka.Core.Data.Repositories;
 using Nuka.Core.Extensions;
 using Nuka.Core.Messaging;
 using Nuka.Core.Messaging.ServiceBus;
+using Nuka.Core.Routes;
 using Nuka.Core.TypeFinders;
-using Nuka.Core.Utils;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Extensions;
 using Nuka.Sample.API.Grpc.Services;
@@ -66,10 +64,10 @@ namespace Nuka.Sample.API
 
             // Add Web Components
             services.AddNukaWeb();
-            // Add AutoMapper
-            services.AddAutoMapper();
             // Add Health Check
             services.AddCustomHealthCheck(_configuration);
+            // Add AutoMapper
+            services.AddAutoMapper();
             // Add Controllers
             services.AddControllers();
             // Add Grpc Components
@@ -161,16 +159,8 @@ namespace Nuka.Sample.API
                 endpoints.MapDefaultControllerRoute();
                 // Map Grpc Service endpoint
                 endpoints.MapGrpcService<SampleGrpcService>();
-                // Map Health Check endpoint
-                endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
-                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
-                {
-                    Predicate = r => r.Name.Contains("self")
-                });
+                // Map Health Check endpoints
+                endpoints.MapHealthCheckRoutes();
             });
         }
     }

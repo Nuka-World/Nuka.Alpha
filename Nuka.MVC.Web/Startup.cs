@@ -14,7 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Nuka.Core.Extensions;
 using Nuka.Core.RequestHandlers;
-using Nuka.Core.Utils;
+using Nuka.Core.Routes;
 using Nuka.MVC.Web.Configurations;
 using Nuka.MVC.Web.Refit;
 using Nuka.MVC.Web.Services;
@@ -41,12 +41,16 @@ namespace Nuka.MVC.Web
 
             // Add Health Check
             services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddUrlGroup(
-                    uri: new Uri(_configuration["URLS:IdentityApiHealthCheckUrl"]),
-                    name: "identity-api-check",
-                    tags: new[] {"identity-api"}
-                );
+                    uri: InternalEndpointsRoute.GetEndpointUri(_configuration["URLS:SampleApiUrl"],
+                        InternalEndpointsRoute.EndpointType.HealthInfo),
+                    name: "SampleAPI-check",
+                    tags: new[] {"api"})
+                .AddUrlGroup(
+                    uri: InternalEndpointsRoute.GetEndpointUri(_configuration["URLS:IdentityApiUrl"],
+                        InternalEndpointsRoute.EndpointType.HealthInfo),
+                    name: "IdentityAPI-check",
+                    tags: new[] {"api"});
 
             // Add MVC
             services.AddMvc()
@@ -113,15 +117,7 @@ namespace Nuka.MVC.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-                endpoints.MapHealthChecks("/hc", new HealthCheckOptions
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
-                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
-                {
-                    Predicate = r => r.Name.Contains("self")
-                });
+                endpoints.MapHealthCheckRoutes();
             });
         }
     }

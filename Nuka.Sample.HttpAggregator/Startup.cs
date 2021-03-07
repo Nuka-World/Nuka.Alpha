@@ -1,18 +1,15 @@
 using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Nuka.Core.Extensions;
 using Nuka.Core.RequestHandlers;
-using Nuka.Core.Utils;
+using Nuka.Core.Routes;
 using Nuka.Sample.HttpAggregator.Configurations;
 using Nuka.Sample.HttpAggregator.Extensions;
 using Nuke.Sample.API.Grpc;
@@ -36,11 +33,16 @@ namespace Nuka.Sample.HttpAggregator
 
             // Add Health Check
             services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddUrlGroup(
-                    uri: new Uri(_configuration["URLS:SampleApiHealthCheckUrl"]),
-                    name: "sample-api-check",
-                    tags: new string[] {"sample-api"});
+                    uri: InternalEndpointsRoute.GetEndpointUri(_configuration["URLS:SampleApiUrl"],
+                        InternalEndpointsRoute.EndpointType.HealthInfo),
+                    name: "SampleAPI-check",
+                    tags: new[] {"api"})
+                .AddUrlGroup(
+                    uri: InternalEndpointsRoute.GetEndpointUri(_configuration["URLS:IdentityApiUrl"],
+                        InternalEndpointsRoute.EndpointType.HealthInfo),
+                    name: "IdentityAPI-check",
+                    tags: new[] {"api"});
 
             // Add MVC
             services
@@ -49,7 +51,7 @@ namespace Nuka.Sample.HttpAggregator
 
             // Add Web Components
             services.AddNukaWeb();
-            
+
             // Add Controllers
             services.AddControllers();
 
@@ -96,15 +98,7 @@ namespace Nuka.Sample.HttpAggregator
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-                endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
-                {
-                    Predicate = _ => true,
-                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                });
-                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
-                {
-                    Predicate = r => r.Name.Contains("self")
-                });
+                endpoints.MapHealthCheckRoutes();
             });
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Nuka.Core.Routes;
 
 namespace Nuka.Sample.API.Extensions
 {
@@ -10,12 +11,17 @@ namespace Nuka.Sample.API.Extensions
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy())
+            services
+                .AddHealthChecks()
+                .AddUrlGroup(
+                    uri: InternalEndpointsRoute.GetEndpointUri(configuration["URLS:IdentityApiUrl"],
+                        InternalEndpointsRoute.EndpointType.HealthInfo),
+                    name: "IdentityAPI-check",
+                    tags: new[] {"api"})
                 .AddSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
                     name: "SampleDB-check",
-                    tags: new string[] {"sample-db"}
+                    tags: new[] {"db"}
                 );
 
             return services;

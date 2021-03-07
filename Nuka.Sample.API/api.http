@@ -11,3 +11,12 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJERDM3MUIyODJDQkQ3MzEwQUQ3MT
 
 ### Test in Gateway
 GET http://localhost:5200/sample/Home/Index
+
+### Liveness
+http://localhost:5001/.internal/live
+
+### Readiness
+http://localhost:5001/.internal/ready
+
+###
+http://localhost:5001/.internal/health

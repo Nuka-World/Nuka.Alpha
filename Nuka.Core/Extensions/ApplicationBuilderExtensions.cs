@@ -1,8 +1,13 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Nuka.Core.Middlewares;
 
-namespace Nuka.Core.Utils
+namespace Nuka.Core.Extensions
 {
     [ExcludeFromCodeCoverage]
     public static class ApplicationBuilderExtensions
@@ -16,8 +21,8 @@ namespace Nuka.Core.Utils
         public static IApplicationBuilder UseNukaWeb(this IApplicationBuilder applicationBuilder)
         {
             return applicationBuilder
-                .UseMiddleware<RequestContextBuilderMiddleware>()   // Register Request Context
-                .UseMiddleware<LoggingContextBuilderMiddleware>();  // Register Logging Context
+                .UseMiddleware<RequestContextBuilderMiddleware>() // Register Request Context
+                .UseMiddleware<LoggingContextBuilderMiddleware>(); // Register Logging Context
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Nuka.Core.Mappers;
 using Nuka.Core.Models;
 using Nuka.Core.RequestHandlers;
@@ -18,8 +19,13 @@ namespace Nuka.Core.Extensions
             // Add Delegating Handler
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
             services.AddTransient<HttpClientRequestDelegatingHandler>();
+            // Add Self Health Check
+            services.AddHealthChecks().AddCheck(
+                name: "self",
+                check: () => HealthCheckResult.Healthy(),
+                tags: new[] {"self"});
         }
-        
+
         public static void AddAutoMapper(this IServiceCollection services)
         {
             // Find mapper configurations provided by other assemblies
