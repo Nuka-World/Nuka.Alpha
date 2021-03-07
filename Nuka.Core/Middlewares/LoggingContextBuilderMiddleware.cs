@@ -14,14 +14,14 @@ using Serilog.Core.Enrichers;
 namespace Nuka.Core.Middlewares
 {
     [ExcludeFromCodeCoverage]
-    public class RequestLoggingMiddleware
+    public class LoggingContextBuilderMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<RequestLoggingMiddleware> _logger;
+        private readonly ILogger<LoggingContextBuilderMiddleware> _logger;
 
-        public RequestLoggingMiddleware(
+        public LoggingContextBuilderMiddleware(
             RequestDelegate next,
-            ILogger<RequestLoggingMiddleware> logger)
+            ILogger<LoggingContextBuilderMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -31,6 +31,8 @@ namespace Nuka.Core.Middlewares
         {
             var request = httpContext.Request;
             var requestPath = httpContext.Request.Path.ToString();
+
+            var message = $"{requestPath} Completion";
 
             var logContextProperties = new Dictionary<string, string>
             {
@@ -51,13 +53,14 @@ namespace Nuka.Core.Middlewares
                     await _next(httpContext);
                     var elapsedMilliseconds = GetElapsedMilliseconds(start, Stopwatch.GetTimestamp());
                     var statusCode = httpContext.Response.StatusCode;
-                    LogCompletion(httpContext, statusCode, elapsedMilliseconds, null, _logger, requestContext,
+                    LogCompletion(httpContext, statusCode, elapsedMilliseconds, message, null, _logger, requestContext,
                         requestPath);
                 }
                 catch (Exception ex)
                 {
-                    LogCompletion(httpContext, 500, GetElapsedMilliseconds(start, Stopwatch.GetTimestamp()), ex,
-                        _logger, requestContext, requestPath);
+                    var elapsedMilliseconds = GetElapsedMilliseconds(start, Stopwatch.GetTimestamp());
+                    LogCompletion(httpContext, 500, elapsedMilliseconds, message, ex, _logger, requestContext,
+                        requestPath);
                     throw;
                 }
             }
@@ -67,6 +70,7 @@ namespace Nuka.Core.Middlewares
             HttpContext httpContext,
             int statusCode,
             double elapsedMs,
+            string message,
             Exception ex,
             ILogger logger,
             RequestContext requestContext,
@@ -88,7 +92,7 @@ namespace Nuka.Core.Middlewares
                 .Select(p => new PropertyEnricher(p.Key, p.Value) as ILogEventEnricher).ToArray();
             using (LogContext.Push(propertyEnrichers))
             {
-                logger.LogInformation(ex, string.Empty);
+                logger.LogInformation(ex, message);
             }
         }
 
