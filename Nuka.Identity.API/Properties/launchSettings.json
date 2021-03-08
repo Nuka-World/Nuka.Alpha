@@ -8,7 +8,12 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ConnectionStrings__DefaultConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;database=Nuka.Identity.API;trusted_connection=yes;",
-        "URLS__MvcWeb": "https://localhost:5500"
+        "URLS__MvcWeb": "https://localhost:5500",
+        "Internal__Info__Tags__0": "api",
+        "Internal__Info__Tags__1": "identity",
+        "Internal__Info__ClusterServiceName": "Identity Service",
+        "Internal__Info__ClusterServiceType": "api-service",
+        "Internal__Info__ClusterServiceVersion": "0.0.1"
       }
     }
   }

@@ -15,7 +15,12 @@
         "AzureServiceBusEnabled": "false",
         "AzureServiceBus__ConnectionString": "Endpoint=sb://utwoo-servicebus-test.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=y7jreHYEO6EpxJ+P873ZD5K/WXxaWli3cKc0rYiMmrw=",
         "AzureServiceBus__TopicName": "demotopic",
-        "AzureServiceBus__SubscriptionName": "demosub"
+        "AzureServiceBus__SubscriptionName": "demosub",
+        "Internal__Info__Tags__0": "api",
+        "Internal__Info__Tags__1": "sample",
+        "Internal__Info__ClusterServiceName": "Sample Service",
+        "Internal__Info__ClusterServiceType": "api-service",
+        "Internal__Info__ClusterServiceVersion": "0.0.1"
       }
     }
   }

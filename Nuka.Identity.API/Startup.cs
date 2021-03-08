@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Nuka.Core.Extensions;
 using Nuka.Core.Routes;
 using Nuka.Identity.API.Certificates;
 using Nuka.Identity.API.Configurations;
@@ -29,8 +29,11 @@ namespace Nuka.Identity.API
             var connectionString = _configuration.GetConnectionString("DefaultConnection");
             var migrationAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
+            // Add Web Components
+            services.AddNukaWeb(_configuration);
+            
+            // Add Health Check
             services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddSqlServer(
                     _configuration.GetConnectionString("DefaultConnection"),
                     name: "IdentityDB-check",
@@ -105,6 +108,8 @@ namespace Nuka.Identity.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseNukaWeb();
+            
             app.UseStaticFiles();
             app.UseForwardedHeaders();
             // Adds IdentityServer

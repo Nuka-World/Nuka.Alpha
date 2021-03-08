@@ -50,7 +50,7 @@ namespace Nuka.Sample.HttpAggregator
                 .AddApplicationServices(_configuration);
 
             // Add Web Components
-            services.AddNukaWeb();
+            services.AddNukaWeb(_configuration);
 
             // Add Controllers
             services.AddControllers();
@@ -99,6 +99,7 @@ namespace Nuka.Sample.HttpAggregator
             {
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapHealthCheckRoutes();
+                endpoints.MapSelfInfo();
             });
         }
     }

@@ -57,8 +57,8 @@ namespace Nuka.MVC.Web
                 .AddNewtonsoftJson();
 
             // Add Web Components
-            services.AddNukaWeb();
-            
+            services.AddNukaWeb(_configuration);
+
             // Add Services
             services.AddSingleton<SampleService>();
 
@@ -118,6 +118,7 @@ namespace Nuka.MVC.Web
             {
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapHealthCheckRoutes();
+                endpoints.MapSelfInfo();
             });
         }
     }

@@ -1,11 +1,11 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Nuka.Core.Middlewares;
 
 namespace Nuka.Core.Routes
 {
@@ -14,7 +14,7 @@ namespace Nuka.Core.Routes
         private const string LivenessEndpointPath = "/.internal/live";
         private const string ReadinessEndpointPath = "/.internal/ready";
         private const string HealthUIEndpointPath = "/.internal/hc";
-        private const string InfoSelfEndpointPath = "/.internal/info";
+        private const string SelfInfoEndpointPath = "/.internal/self";
 
         public enum EndpointType
         {
@@ -32,7 +32,7 @@ namespace Nuka.Core.Routes
                 EndpointType.Liveness => new Uri(baseUri + LivenessEndpointPath),
                 EndpointType.Readiness => new Uri(baseUri + ReadinessEndpointPath),
                 EndpointType.HealthInfo => new Uri(baseUri + HealthUIEndpointPath),
-                EndpointType.SelfInfo => new Uri(baseUri + InfoSelfEndpointPath),
+                EndpointType.SelfInfo => new Uri(baseUri + SelfInfoEndpointPath),
                 _ => new Uri(baseUri)
             };
         }
@@ -66,6 +66,16 @@ namespace Nuka.Core.Routes
                     Predicate = _ => true,
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
+        }
+
+        public static IEndpointConventionBuilder MapSelfInfo(this IEndpointRouteBuilder endpoints)
+        {
+            var pipeline = endpoints
+                .CreateApplicationBuilder()
+                .UseMiddleware<InfoSelfMiddleware>()
+                .Build();
+
+            return endpoints.Map(SelfInfoEndpointPath, pipeline);
         }
     }
 }

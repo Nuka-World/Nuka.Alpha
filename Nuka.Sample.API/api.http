@@ -18,5 +18,8 @@ http://localhost:5001/.internal/live
 ### Readiness
 http://localhost:5001/.internal/ready
 
-###
-http://localhost:5001/.internal/health
+### Health Info
+http://localhost:5001/.internal/hc
+
+### Self Info
+http://localhost:5001/.internal/self

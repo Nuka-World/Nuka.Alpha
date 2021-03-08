@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Nuka.Core.Models
+namespace Nuka.Core.Constants
 {
     [ExcludeFromCodeCoverage]
     public static class StandardLogProperties

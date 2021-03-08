@@ -9,7 +9,12 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "URLS__IdentityApiUrl": "https://localhost:5000",
         "URLS__SampleApiUrl": "http://localhost:5001",
-        "URLS__SampleApiGrpcUrl": "http://localhost:9001"
+        "URLS__SampleApiGrpcUrl": "http://localhost:9001",
+        "Internal__Info__Tags__0": "aggregator",
+        "Internal__Info__Tags__1": "sample",
+        "Internal__Info__ClusterServiceName": "Sample Aggregator",
+        "Internal__Info__ClusterServiceType": "aggregator-service",
+        "Internal__Info__ClusterServiceVersion": "0.0.1"
       }
     }
   }

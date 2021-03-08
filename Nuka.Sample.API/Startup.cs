@@ -63,9 +63,7 @@ namespace Nuka.Sample.API
                 });
 
             // Add Web Components
-            services.AddNukaWeb();
-            // Add Health Check
-            services.AddCustomHealthCheck(_configuration);
+            services.AddNukaWeb(_configuration);
             // Add AutoMapper
             services.AddAutoMapper();
             // Add Controllers
@@ -161,6 +159,8 @@ namespace Nuka.Sample.API
                 endpoints.MapGrpcService<SampleGrpcService>();
                 // Map Health Check endpoints
                 endpoints.MapHealthCheckRoutes();
+                // Map Self Info
+                endpoints.MapSelfInfo();
             });
         }
     }

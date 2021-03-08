@@ -1,0 +1,11 @@
+### Liveness
+https://localhost:5500/.internal/live
+
+### Readiness
+https://localhost:5500/.internal/ready
+
+### Health Info
+https://localhost:5500/.internal/hc
+
+### Self Info
+https://localhost:5500/.internal/self

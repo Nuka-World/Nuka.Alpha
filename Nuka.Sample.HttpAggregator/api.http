@@ -11,3 +11,15 @@ Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkJERDM3MUIyODJDQkQ3MzEwQUQ3MT
 
 ### Test in Gateway
 GET http://localhost:5200/sample-aggr/Sample/Item/1
+
+### Liveness
+http://localhost:5101/.internal/live
+
+### Readiness
+http://localhost:5101/.internal/ready
+
+### Health Info
+http://localhost:5101/.internal/hc
+
+### Self Info
+http://localhost:5101/.internal/self

@@ -9,7 +9,11 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "URLS__IdentityApiUrl": "https://localhost:5000",
         "URLS__SampleApiUrl": "http://localhost:5101",
-        "URLS__CallBackUrl": "https://localhost:5500"
+        "URLS__CallBackUrl": "https://localhost:5500",
+        "Internal__Info__Tags__0": "mvc",
+        "Internal__Info__ClusterServiceName": "MVC Client",
+        "Internal__Info__ClusterServiceType": "client",
+        "Internal__Info__ClusterServiceVersion": "0.0.1"
       }
     }
   }

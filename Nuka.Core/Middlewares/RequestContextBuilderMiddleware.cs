@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Nuka.Core.Constants;
 using Nuka.Core.Models;
 
 namespace Nuka.Core.Middlewares

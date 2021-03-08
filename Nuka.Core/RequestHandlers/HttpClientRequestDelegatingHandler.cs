@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Nuka.Core.Constants;
 using Nuka.Core.Models;
 
 namespace Nuka.Core.RequestHandlers
