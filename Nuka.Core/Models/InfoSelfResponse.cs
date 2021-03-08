@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Newtonsoft.Json;
+using Nuka.Core.Middlewares.InfoSelf.Providers;
 
 namespace Nuka.Core.Models
 {
@@ -11,6 +13,6 @@ namespace Nuka.Core.Models
         public string ClusterServiceType { get; set; }
         public IEnumerable<string> ApiVersions { get; set; }
         public IDictionary<string, string> Context { get; set; }
-        public IDictionary<string, double> Metrics { get; set; }
+        public ReadOnlyDictionary<string, double> Metrics { get; set; }
     }
 }

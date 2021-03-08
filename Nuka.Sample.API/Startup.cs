@@ -16,10 +16,10 @@ using Nuka.Core.Data.Repositories;
 using Nuka.Core.Extensions;
 using Nuka.Core.Messaging;
 using Nuka.Core.Messaging.ServiceBus;
+using Nuka.Core.Middlewares.InfoSelf.Providers;
 using Nuka.Core.Routes;
 using Nuka.Core.TypeFinders;
 using Nuka.Sample.API.Data;
-using Nuka.Sample.API.Extensions;
 using Nuka.Sample.API.Grpc.Services;
 using Nuka.Sample.API.Messaging.EventHandler;
 using Nuka.Sample.API.Services;
@@ -75,6 +75,9 @@ namespace Nuka.Sample.API
 
             // Add TypeFinder
             services.AddSingleton<ITypeFinder, AppDomainTypeFinder>();
+
+            // Add Metrics Provider Service
+            services.AddSingleton<IMetricsProviderService, MetricsProviderService>();
 
             // Check ServiceBus Enabled
             if (Convert.ToBoolean(_configuration["AzureServiceBusEnabled"]))

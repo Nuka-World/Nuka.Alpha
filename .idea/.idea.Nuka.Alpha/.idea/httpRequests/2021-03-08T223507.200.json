@@ -1,0 +1,17 @@
+{
+  "tags": [
+    "api",
+    "sample"
+  ],
+  "clusterServiceName": "Sample Service",
+  "clusterServiceVersion": "0.0.1",
+  "clusterServiceType": "api-service",
+  "apiVersions": null,
+  "context": null,
+  "metrics": {
+    "http_default_connection_limit": 2,
+    "processor_count": 8,
+    "min_worker_threads": 8,
+    "min_iocp_threads": 8
+  }
+}
