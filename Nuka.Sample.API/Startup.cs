@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Nuka.Core.Data.DBContext;
 using Nuka.Core.Data.Repositories;
 using Nuka.Core.Extensions;
+using Nuka.Core.Filters;
 using Nuka.Core.Messaging;
 using Nuka.Core.Messaging.ServiceBus;
 using Nuka.Core.Middlewares.InfoSelf.Providers;
@@ -67,7 +68,7 @@ namespace Nuka.Sample.API
             // Add AutoMapper
             services.AddAutoMapper();
             // Add Controllers
-            services.AddControllers();
+            services.AddControllers(options => options.Filters.Add(typeof(LogRouteTemplateFilter)));
             // Add Grpc Components
             services.AddGrpc();
             // Add HttpContext
@@ -75,7 +76,6 @@ namespace Nuka.Sample.API
 
             // Add TypeFinder
             services.AddSingleton<ITypeFinder, AppDomainTypeFinder>();
-
             // Add Metrics Provider Service
             services.AddSingleton<IMetricsProviderService, MetricsProviderService>();
 
