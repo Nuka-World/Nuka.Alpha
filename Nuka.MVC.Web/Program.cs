@@ -3,6 +3,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Sinks.Http.BatchFormatters;
 
 namespace Nuka.MVC.Web
 {
@@ -40,6 +41,9 @@ namespace Nuka.MVC.Web
                 .Enrich.WithProperty("ApplicationContext", AppName)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
+                .WriteTo.Http(
+                    requestUri: configuration["URLS:LogstashUrl"],
+                    batchFormatter: new ArrayBatchFormatter())
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
         }
