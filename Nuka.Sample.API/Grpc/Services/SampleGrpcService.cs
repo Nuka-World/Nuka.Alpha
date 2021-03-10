@@ -19,9 +19,9 @@ namespace Nuka.Sample.API.Grpc.Services
 
         public SampleGrpcService(
             SampleService service,
-            IEventPublisher eventPublisher,
             IHttpContextAccessor httpContextAccessor,
-            ILogger<SampleGrpcService> logger)
+            ILogger<SampleGrpcService> logger,
+            IEventPublisher eventPublisher = null)
         {
             _context = httpContextAccessor.HttpContext;
             _service = service;
@@ -30,7 +30,7 @@ namespace Nuka.Sample.API.Grpc.Services
         }
 
         [Authorize]
-        public override Task<SampleItemResponse> GetItemById(SampleItemRequest request, ServerCallContext context)
+        public override async Task<SampleItemResponse> GetItemById(SampleItemRequest request, ServerCallContext context)
         {
             var item = _service.GetItemById(request.Id);
 
@@ -55,9 +55,10 @@ namespace Nuka.Sample.API.Grpc.Services
             };
 
             // Publish Event
-            _eventPublisher.PublishAsync(new SampleEvent {ItemId = request.Id.ToString()});
+            if (_eventPublisher != null)
+                await _eventPublisher.PublishAsync(new SampleEvent {ItemId = request.Id.ToString()});
 
-            return Task.FromResult(sampleItemResponse);
+            return sampleItemResponse;
         }
     }
 }

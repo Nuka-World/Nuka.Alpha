@@ -6,5 +6,6 @@ namespace Nuka.Core.Constants
     public static class StandardHeaders
     {
         public const string CorrelationId = "X-Correlation-ID";
+        public const string HttpClusterCaller = "X-Cluster-Caller";
     }
 }

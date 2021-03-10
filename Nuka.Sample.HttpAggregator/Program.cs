@@ -3,6 +3,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Sinks.Http.BatchFormatters;
 
 namespace Nuka.Sample.HttpAggregator
 {
@@ -18,7 +19,7 @@ namespace Nuka.Sample.HttpAggregator
 
             Log.Information("Configuring web host ({ApplicationContext})...", AppName);
             var host = CreateHostBuilder(configuration, args).Build();
-            
+
             Log.Information("Starting web host ({ApplicationContext})...", AppName);
             host.Run();
 
@@ -40,6 +41,9 @@ namespace Nuka.Sample.HttpAggregator
                 .Enrich.WithProperty("ApplicationContext", AppName)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
+                .WriteTo.Http(
+                    requestUri: configuration["URLS:LogstashUrl"],
+                    batchFormatter: new ArrayBatchFormatter())
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
         }

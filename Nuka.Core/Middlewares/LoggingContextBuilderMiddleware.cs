@@ -33,7 +33,7 @@ namespace Nuka.Core.Middlewares
             var request = httpContext.Request;
             var requestPath = httpContext.Request.Path.ToString();
 
-            var message = $"{requestPath} Completion";
+            var message = $"Request Completion: {requestPath}";
 
             var logContextProperties = new Dictionary<string, string>
             {
