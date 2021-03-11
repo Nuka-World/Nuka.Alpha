@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -51,6 +52,12 @@ namespace Nuka.Sample.API.Controllers
                 await _eventPublisher.PublishAsync(new SampleEvent {ItemId = "00001"});
 
             return Json(item.ToModel<SampleItemModel>());
+        }
+
+        [HttpGet]
+        public Task<IActionResult> Error()
+        {
+            throw new Exception("This is Demo Exception");
         }
     }
 }
