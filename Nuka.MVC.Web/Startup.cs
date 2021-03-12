@@ -1,25 +1,21 @@
 using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Nuka.Core.Extensions;
+using Nuka.Core.OpenTelemetry;
 using Nuka.Core.RequestHandlers;
 using Nuka.Core.Routes;
 using Nuka.MVC.Web.Configurations;
 using Nuka.MVC.Web.Refit;
 using Nuka.MVC.Web.Services;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Refit;
 
 namespace Nuka.MVC.Web
@@ -87,24 +83,6 @@ namespace Nuka.MVC.Web
                     options.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(0);
                 });
             
-            // Add Jaeger Telemetry
-            if (Convert.ToBoolean(_configuration["JaegerEnabled"]))
-            {
-                services.AddOpenTelemetryTracing(builder =>
-                {
-                    builder
-                        .SetResourceBuilder(ResourceBuilder.CreateDefault()
-                            .AddService(_configuration.GetValue<string>("Jaeger:ServiceName")))
-                        .AddAspNetCoreInstrumentation()
-                        .AddHttpClientInstrumentation()
-                        .AddJaegerExporter(options =>
-                        {
-                            options.AgentHost = _configuration.GetValue<string>("Jaeger:Host");
-                            options.AgentPort = _configuration.GetValue<int>("Jaeger:Port");
-                        });
-                });
-            }
-
             // Add HttpContext
             services.AddHttpContextAccessor();
             // Add Refits
@@ -112,6 +90,9 @@ namespace Nuka.MVC.Web
                 .ConfigureHttpClient(client => { client.BaseAddress = new Uri(_configuration["URLS:SampleApiUrl"]); })
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
                 .AddHttpMessageHandler<HttpClientRequestDelegatingHandler>();
+            
+            // Add Jaeger Tracing
+            services.AddJaegerTracing(_configuration);
 
             var containers = new ContainerBuilder();
             containers.Populate(services);
