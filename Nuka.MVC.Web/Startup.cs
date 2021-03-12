@@ -18,6 +18,8 @@ using Nuka.Core.Routes;
 using Nuka.MVC.Web.Configurations;
 using Nuka.MVC.Web.Refit;
 using Nuka.MVC.Web.Services;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Refit;
 
 namespace Nuka.MVC.Web
@@ -84,6 +86,24 @@ namespace Nuka.MVC.Web
                     options.Scope.Add("sample.api.access");
                     options.TokenValidationParameters.ClockSkew = TimeSpan.FromSeconds(0);
                 });
+            
+            // Add Jaeger Telemetry
+            if (Convert.ToBoolean(_configuration["JaegerEnabled"]))
+            {
+                services.AddOpenTelemetryTracing(builder =>
+                {
+                    builder
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                            .AddService(_configuration.GetValue<string>("Jaeger:ServiceName")))
+                        .AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddJaegerExporter(options =>
+                        {
+                            options.AgentHost = _configuration.GetValue<string>("Jaeger:Host");
+                            options.AgentPort = _configuration.GetValue<int>("Jaeger:Port");
+                        });
+                });
+            }
 
             // Add HttpContext
             services.AddHttpContextAccessor();

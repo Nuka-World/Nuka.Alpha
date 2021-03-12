@@ -13,6 +13,8 @@ using Nuka.Core.Routes;
 using Nuka.Sample.HttpAggregator.Configurations;
 using Nuka.Sample.HttpAggregator.Extensions;
 using Nuke.Sample.API.Grpc;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace Nuka.Sample.HttpAggregator
 {
@@ -72,6 +74,24 @@ namespace Nuka.Sample.HttpAggregator
                 .ConfigureHttpClient(client => client.BaseAddress = new Uri(_configuration["URLS:SampleApiGrpcUrl"]))
                 .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
                 .AddHttpMessageHandler<HttpClientRequestDelegatingHandler>();
+            
+            // Add Jaeger Telemetry
+            if (Convert.ToBoolean(_configuration["JaegerEnabled"]))
+            {
+                services.AddOpenTelemetryTracing(builder =>
+                {
+                    builder
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                            .AddService(_configuration.GetValue<string>("Jaeger:ServiceName")))
+                        .AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddJaegerExporter(options =>
+                        {
+                            options.AgentHost = _configuration.GetValue<string>("Jaeger:Host");
+                            options.AgentPort = _configuration.GetValue<int>("Jaeger:Port");
+                        });
+                });
+            }
 
             // Use Autofac container
             var containers = new ContainerBuilder();

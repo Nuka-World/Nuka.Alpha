@@ -9,13 +9,21 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "HTTP_PORT": "5001",
         "GRPC_PORT": "9001",
+        "ConnectionStrings__DefaultConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;database=Nuka.Sample.API;trusted_connection=yes;",
+
         "URLS__IdentityApiUrl": "https://localhost:5000",
         "URLS__LogstashUrl": "http://192.168.20.151:9880/nuka/sample",
-        "ConnectionStrings__DefaultConnection": "Data Source=(LocalDb)\\MSSQLLocalDB;database=Nuka.Sample.API;trusted_connection=yes;",
+      
         "AzureServiceBusEnabled": "false",
         "AzureServiceBus__ConnectionString": "Endpoint=sb://utwoo-servicebus-test.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=y7jreHYEO6EpxJ+P873ZD5K/WXxaWli3cKc0rYiMmrw=",
         "AzureServiceBus__TopicName": "demotopic",
         "AzureServiceBus__SubscriptionName": "demosub",
+      
+        "JaegerEnabled": "true",
+        "Jaeger__ServiceName": "Nuka.Sample.API",
+        "Jaeger__Host": "centa",
+        "Jaeger__Port": "6831",
+        
         "Internal__Info__Tags__0": "api",
         "Internal__Info__Tags__1": "sample",
         "Internal__Info__ClusterServiceName": "Sample Service",

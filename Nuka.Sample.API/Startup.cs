@@ -24,6 +24,8 @@ using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Grpc.Services;
 using Nuka.Sample.API.Messaging.EventHandler;
 using Nuka.Sample.API.Services;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace Nuka.Sample.API
 {
@@ -116,6 +118,24 @@ namespace Nuka.Sample.API
             // If NoAuth in setting then not check all security-specific metadata.
             services.Configure<RouteOptions>(options =>
                 options.SuppressCheckForUnhandledSecurityMetadata = Convert.ToBoolean(_configuration["NoAuth"]));
+
+            // Add Jaeger Telemetry
+            if (Convert.ToBoolean(_configuration["JaegerEnabled"]))
+            {
+                services.AddOpenTelemetryTracing(builder =>
+                {
+                    builder
+                        .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                            .AddService(_configuration.GetValue<string>("Jaeger:ServiceName")))
+                        .AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddJaegerExporter(options =>
+                        {
+                            options.AgentHost = _configuration.GetValue<string>("Jaeger:Host");
+                            options.AgentPort = _configuration.GetValue<int>("Jaeger:Port");
+                        });
+                });
+            }
 
             // Use Autofac container
             var containers = new ContainerBuilder();
