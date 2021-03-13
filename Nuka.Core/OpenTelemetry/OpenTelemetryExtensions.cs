@@ -19,6 +19,8 @@ namespace Nuka.Core.OpenTelemetry
                         .SetResourceBuilder(ResourceBuilder.CreateDefault()
                             .AddService(configuration.GetValue<string>("Jaeger:ServiceName")))
                         .AddAspNetCoreInstrumentation()
+                        .AddGrpcClientInstrumentation()
+                        .AddSqlClientInstrumentation()
                         .AddHttpClientInstrumentation()
                         .AddJaegerExporter(options =>
                         {
