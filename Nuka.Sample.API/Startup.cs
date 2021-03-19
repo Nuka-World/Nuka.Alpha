@@ -16,6 +16,7 @@ using Nuka.Core.Data.Repositories;
 using Nuka.Core.Extensions;
 using Nuka.Core.Filters;
 using Nuka.Core.Messaging;
+using Nuka.Core.Messaging.RabbitMQ;
 using Nuka.Core.Messaging.ServiceBus;
 using Nuka.Core.Middlewares.InfoSelf.Providers;
 using Nuka.Core.OpenTelemetry;
@@ -25,6 +26,7 @@ using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Grpc.Services;
 using Nuka.Sample.API.Messaging.EventHandler;
 using Nuka.Sample.API.Services;
+using RabbitMQ.Client;
 
 namespace Nuka.Sample.API
 {
@@ -80,6 +82,9 @@ namespace Nuka.Sample.API
             // Add Metrics Provider Service
             services.AddSingleton<IMetricsProviderService, MetricsProviderService>();
 
+            #region Service Bus Settings
+
+            /*
             // Check ServiceBus Enabled
             if (Convert.ToBoolean(_configuration["AzureServiceBusEnabled"]))
             {
@@ -112,7 +117,75 @@ namespace Nuka.Sample.API
                         iLifetimeScope,
                         logger);
                 });
+            }*/
+
+            #endregion
+
+            #region RabbitMQ Settings
+
+            // Check RabbitMQ Enabled
+            if (Convert.ToBoolean(_configuration["RabbitMQEnabled"]))
+            {
+                // Add Event Publisher;
+                services.AddSingleton<IEventPublisher, RabbitMQEventPublisher>(sp =>
+                {
+                    var rabbitmqConfig = _configuration.GetSection("RabbitMQ");
+
+                    var factory = new ConnectionFactory()
+                    {
+                        HostName = rabbitmqConfig["HostName"],
+                        VirtualHost = rabbitmqConfig["VirtualHost"],
+                        DispatchConsumersAsync = true,
+                        UserName = rabbitmqConfig["UserName"],
+                        Password = rabbitmqConfig["Password"]
+                    };
+
+                    var loggerConnection = sp.GetRequiredService<ILogger<DefaultRabbitMQConnection>>();
+                    var connection = new DefaultRabbitMQConnection(factory, loggerConnection);
+
+                    var loggerPublisher = sp.GetRequiredService<ILogger<RabbitMQEventPublisher>>();
+                    return new RabbitMQEventPublisher(
+                        connection,
+                        loggerPublisher,
+                        rabbitmqConfig["ExchangeName"],
+                        rabbitmqConfig["QueueName"]);
+                });
+
+
+                // Add Event Handlers
+                services.AddSingleton<SampleEventHandler>();
+                services.AddSingleton<SampleEventHandler2>();
+                // Add Event Handler Service
+                services.AddHostedService(sp =>
+                {
+                    var rabbitmqConfig = _configuration.GetSection("RabbitMQ");
+                    var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+                    var typeFinder = sp.GetRequiredService<ITypeFinder>();
+                    var factory = new ConnectionFactory()
+                    {
+                        HostName = rabbitmqConfig["HostName"],
+                        VirtualHost = rabbitmqConfig["VirtualHost"],
+                        DispatchConsumersAsync = true,
+                        UserName = rabbitmqConfig["UserName"],
+                        Password = rabbitmqConfig["Password"]
+                    };
+
+                    var loggerConnection = sp.GetRequiredService<ILogger<DefaultRabbitMQConnection>>();
+                    var connection = new DefaultRabbitMQConnection(factory, loggerConnection);
+
+                    var loggerHostService = sp.GetRequiredService<ILogger<RabbitMQEventHandlerHostService>>();
+
+                    return new RabbitMQEventHandlerHostService(
+                        connection,
+                        rabbitmqConfig["ExchangeName"],
+                        rabbitmqConfig["QueueName"],
+                        typeFinder,
+                        iLifetimeScope,
+                        loggerHostService);
+                });
             }
+
+            #endregion
 
             // If NoAuth in setting then not check all security-specific metadata.
             services.Configure<RouteOptions>(options =>

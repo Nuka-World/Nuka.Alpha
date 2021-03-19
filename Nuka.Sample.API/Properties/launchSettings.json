@@ -18,6 +18,14 @@
         "AzureServiceBus__ConnectionString": "Endpoint=sb://utwoo-servicebus-test.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=y7jreHYEO6EpxJ+P873ZD5K/WXxaWli3cKc0rYiMmrw=",
         "AzureServiceBus__TopicName": "demotopic",
         "AzureServiceBus__SubscriptionName": "demosub",
+
+        "RabbitMQEnabled": "false",
+        "RabbitMQ__HostName": "192.168.20.151",
+        "RabbitMQ__VirtualHost": "host",
+        "RabbitMQ__UserName": "admin",
+        "RabbitMQ__Password": "admin",
+        "RabbitMQ__ExchangeName": "nuka-exchange",
+        "RabbitMQ__QueueName": "nuka-queue",
       
         "JaegerEnabled": "true",
         "Jaeger__ServiceName": "Nuka.Sample.API",
