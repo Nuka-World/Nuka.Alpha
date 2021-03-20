@@ -16,7 +16,7 @@ namespace Nuka.Core.Messaging
             CorrelationId = correlationId;
         }
         
-        [JsonProperty] public string CorrelationId { get; private init; }
+        [JsonProperty] public string CorrelationId { get; set; }
 
         [JsonProperty] public Guid Id { get; private init; }
 

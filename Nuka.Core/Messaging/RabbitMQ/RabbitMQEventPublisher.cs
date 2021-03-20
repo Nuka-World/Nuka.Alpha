@@ -22,7 +22,7 @@ namespace Nuka.Core.Messaging.RabbitMQ
             _connection = connection ?? throw new ArgumentNullException(nameof(connection));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _exchangeName = exchangeName;
-            
+
             if (!_connection.IsConnected) _connection.TryConnect();
             using var channel = _connection.CreateModel();
 

@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nuka.Core.Constants;
 using Nuka.Core.Mappers;
 using Nuka.Core.Messaging;
+using Nuka.Core.Models;
 using Nuka.Sample.API.Data.Entities;
 using Nuka.Sample.API.Messaging.EventPublish;
 using Nuka.Sample.API.Models;
@@ -15,16 +17,19 @@ namespace Nuka.Sample.API.Controllers
     public class HomeController : Controller
     {
         private readonly SampleService _service;
+        private readonly RequestContext _requestContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILogger<HomeController> _logger;
         
         public HomeController(
             SampleService service,
+            RequestContext requestContext,
             ILogger<HomeController> logger,
             IEventPublisher eventPublisher = null)
         {
             _logger = logger;
             _service = service;
+            _requestContext = requestContext;
             _eventPublisher = eventPublisher;
         }
 
@@ -49,7 +54,11 @@ namespace Nuka.Sample.API.Controllers
 
             // Publish Event
             if (_eventPublisher != null)
-                await _eventPublisher.PublishAsync(new SampleEvent {ItemId = "00001"});
+                await _eventPublisher.PublishAsync(new SampleEvent
+                {
+                    CorrelationId = _requestContext[StandardHeaders.CorrelationId],
+                    ItemId = "00001"
+                });
 
             return Json(item.ToModel<SampleItemModel>());
         }
