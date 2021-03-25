@@ -17,25 +17,22 @@ namespace Nuka.Sample.API.Controllers
     public class HomeController : Controller
     {
         private readonly SampleService _service;
-        private readonly RequestContext _requestContext;
         private readonly IEventPublisher _eventPublisher;
         private readonly ILogger<HomeController> _logger;
-        
+
         public HomeController(
             SampleService service,
-            RequestContext requestContext,
             ILogger<HomeController> logger,
             IEventPublisher eventPublisher = null)
         {
             _logger = logger;
             _service = service;
-            _requestContext = requestContext;
             _eventPublisher = eventPublisher;
         }
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromServices] RequestContext requestContext)
         {
             SampleItem item = _service.GetItemById(1);
 
@@ -56,7 +53,7 @@ namespace Nuka.Sample.API.Controllers
             if (_eventPublisher != null)
                 await _eventPublisher.PublishAsync(new SampleEvent
                 {
-                    CorrelationId = _requestContext[StandardHeaders.CorrelationId],
+                    CorrelationId = requestContext[StandardHeaders.CorrelationId],
                     ItemId = "00001"
                 });
 

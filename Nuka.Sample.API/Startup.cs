@@ -23,6 +23,7 @@ using Nuka.Core.Routes;
 using Nuka.Core.TypeFinders;
 using Nuka.Sample.API.Data;
 using Nuka.Sample.API.Grpc.Services;
+using Nuka.Sample.API.Messaging.EventHandler;
 using Nuka.Sample.API.Services;
 using RabbitMQ.Client;
 
@@ -151,10 +152,10 @@ namespace Nuka.Sample.API
 
 
                 // Add Event Handlers
-                //services.AddSingleton<SampleEventHandler>();
-                //services.AddSingleton<SampleEventHandler2>();
+                services.AddSingleton<SampleEventHandler>();
+                services.AddSingleton<SampleEventHandler2>();
                 // Add Event Handler Service
-                /*services.AddHostedService(sp =>
+                services.AddHostedService(sp =>
                 {
                     var rabbitmqConfig = _configuration.GetSection("RabbitMQ");
                     var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
@@ -180,7 +181,7 @@ namespace Nuka.Sample.API
                         typeFinder,
                         iLifetimeScope,
                         loggerHostService);
-                });*/
+                });
             }
 
             #endregion
