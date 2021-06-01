@@ -15,7 +15,7 @@
         "URLS__LogstashUrl": "http://192.168.20.151:9880/nuka/sample",
       
         "AzureServiceBusEnabled": "false",
-        "AzureServiceBus__ConnectionString": "Endpoint=sb://utwoo-servicebus-test.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=y7jreHYEO6EpxJ+P873ZD5K/WXxaWli3cKc0rYiMmrw=",
+        "AzureServiceBus__ConnectionString": "Endpoint=sb://x.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=xxx",
         "AzureServiceBus__TopicName": "demotopic",
         "AzureServiceBus__SubscriptionName": "demosub",
 
