@@ -105,7 +105,7 @@ namespace Nuka.Sample.API
                 services.AddHostedService(sp =>
                 {
                     var serviceBusConfig = _configuration.GetSection("AzureServiceBus");
-                    var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+                    var LifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                     var logger = sp.GetRequiredService<ILogger<ServiceBusEventHandlerHostService>>();
                     var typeFinder = sp.GetRequiredService<ITypeFinder>();
                     return new ServiceBusEventHandlerHostService(
@@ -113,7 +113,7 @@ namespace Nuka.Sample.API
                         serviceBusConfig["TopicName"],
                         serviceBusConfig["SubscriptionName"],
                         typeFinder,
-                        iLifetimeScope,
+                        LifetimeScope,
                         logger);
                 });
             }*/
@@ -154,11 +154,12 @@ namespace Nuka.Sample.API
                 // Add Event Handlers
                 services.AddSingleton<SampleEventHandler>();
                 services.AddSingleton<SampleEventHandler2>();
+                
                 // Add Event Handler Service
                 services.AddHostedService(sp =>
                 {
                     var rabbitmqConfig = _configuration.GetSection("RabbitMQ");
-                    var iLifetimeScope = sp.GetRequiredService<ILifetimeScope>();
+                    var lifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                     var typeFinder = sp.GetRequiredService<ITypeFinder>();
                     var factory = new ConnectionFactory()
                     {
@@ -179,7 +180,7 @@ namespace Nuka.Sample.API
                         rabbitmqConfig["ExchangeName"],
                         rabbitmqConfig["QueueName"],
                         typeFinder,
-                        iLifetimeScope,
+                        lifetimeScope,
                         loggerHostService);
                 });
             }
